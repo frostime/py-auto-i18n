@@ -5,13 +5,13 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Python Debugger: Current File with Arguments",
+            "name": "Debug Translation",
             "type": "debugpy",
             "request": "launch",
-            "program": "${file}",
+            "program": "${workspaceFolder}/py_i18n/cli.py",
             "console": "integratedTerminal",
             "args": [
-                "${command:pickArgs}"
+                "translate"
             ]
         }
     ]

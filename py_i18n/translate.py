@@ -1,9 +1,10 @@
 import json
 from pathlib import Path
 
+import click
 import yaml
 
-from py_i18n.config import get_project_config
+from py_i18n.config import get_global_config, get_project_config
 from py_i18n.gpt import send_gpt_request
 from py_i18n.utils import diff_objects, merge_objects
 
@@ -18,20 +19,32 @@ def translate_i18n(full=None):
     with open(main_file_path, "r", encoding="utf-8") as f:
         in_obj = yaml.safe_load(f)
 
+    if in_obj is None or len(in_obj) == 0:
+        click.echo("No i18n data found in main file, translation aborted.", color="red")
+        return
+
     out_files = list(i18n_dir.glob(f'*.{main_file.split(".")[-1]}'))
     out_files = [f for f in out_files if f != main_file_path]
+
+    PROMPT = get_global_config().get("prompt", {}).get("translate", "")
+
+    if PROMPT == "":
+        click.echo("No prompt found in global config, translation aborted.", color="red")
+        return
 
     for out_file in out_files:
         with open(out_file, "r", encoding="utf-8") as f:
             out_obj = yaml.safe_load(f)
+
+        if out_obj is None:
+            out_obj = {}
 
         if strategy == "diff":
             to_translate = diff_objects(in_obj, out_obj)
         else:
             to_translate = in_obj
 
-        prompt = config.get("prompt", {}).get("translate", "")
-        prompt = prompt.format(
+        prompt = PROMPT.format(
             InFile=main_file,
             OutFile=out_file.name,
             Dict=json.dumps(config.get("dict", {})),
