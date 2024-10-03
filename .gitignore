@@ -1,0 +1,11 @@
+build/
+dist/
+*.egg-info/
+__pycache__/
+*.py[cod]
+.pdm-python
+pdm.lock
+
+temp/
+
+py-i18n.project.yaml

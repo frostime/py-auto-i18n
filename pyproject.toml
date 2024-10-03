@@ -1,0 +1,24 @@
+
+[project]
+name = "py-i18n"
+version = "0.1.0"
+description = ""
+authors = [
+    {name = "frostime", email = "frostime@foxmail.com"},
+]
+dependencies = [
+    "Click>=8.1.7",
+    "pyyaml>=6.0.2",
+    "requests>=2.32.3",
+]
+requires-python = ">=3.9"
+readme = "README.md"
+license = {text = "MIT"}
+
+[build-system]
+requires = ["pdm-backend"]
+build-backend = "pdm.backend"
+
+[project.scripts]
+i18n = "py_i18n.cli:cli"
+i18n-py = "py_i18n.cli:cli"
