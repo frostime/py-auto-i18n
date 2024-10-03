@@ -3,9 +3,9 @@ from pathlib import Path
 
 import yaml
 
-from py_i18n.config import get_global_config, get_project_config
-from py_i18n.gpt import send_gpt_request
-from py_i18n.utils import extract_i18n_text, merge_objects, replace_i18n_in_code
+from auto_i18n.config import get_global_config, get_project_config
+from auto_i18n.gpt import send_gpt_request
+from auto_i18n.utils import extract_i18n_text, merge_objects, replace_i18n_in_code
 
 
 def ensure_valid_key(i18n_obj: dict[str, str]):

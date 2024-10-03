@@ -1,7 +1,7 @@
 
 [project]
-name = "py-i18n"
-version = "0.1.0"
+name = "auto-i18n"
+version = "0.2.0"
 description = ""
 authors = [
     {name = "frostime", email = "frostime@foxmail.com"},
@@ -20,5 +20,5 @@ requires = ["pdm-backend"]
 build-backend = "pdm.backend"
 
 [project.scripts]
-i18n = "py_i18n.cli:cli"
-i18n-py = "py_i18n.cli:cli"
+i18n = "auto_i18n.cli:cli"
+auto-i18n = "auto_i18n.cli:cli"

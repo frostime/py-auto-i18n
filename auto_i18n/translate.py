@@ -4,9 +4,9 @@ from pathlib import Path
 import click
 import yaml
 
-from py_i18n.config import get_global_config, get_project_config
-from py_i18n.gpt import send_gpt_request
-from py_i18n.utils import diff_objects, merge_objects
+from auto_i18n.config import get_global_config, get_project_config
+from auto_i18n.gpt import send_gpt_request
+from auto_i18n.utils import diff_objects, merge_objects
 
 
 def translate_i18n(full=None):

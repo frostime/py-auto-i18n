@@ -1,9 +1,9 @@
 import click
 
-from py_i18n.config import init_global_config, init_project_config
-from py_i18n.extract import extract_i18n
-from py_i18n.gpt import send_gpt_request
-from py_i18n.translate import translate_i18n
+from auto_i18n.config import init_global_config, init_project_config
+from auto_i18n.extract import extract_i18n
+from auto_i18n.gpt import send_gpt_request
+from auto_i18n.translate import translate_i18n
 
 
 @click.group()

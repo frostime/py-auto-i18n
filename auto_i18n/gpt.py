@@ -3,7 +3,7 @@ import sys
 import click
 import requests
 
-from py_i18n.config import get_global_config
+from auto_i18n.config import get_global_config
 
 
 def send_gpt_request(prompt):
