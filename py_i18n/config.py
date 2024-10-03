@@ -34,7 +34,10 @@ PROMPT_AUTOKEY = """
 - 输出格式要求: 
   - 使用 json 语言，保留 json 格式
   - 将 json 代码直接输出，不需要附带 ‍```json ‍``` 的代码块标识
-- key 名称要求: 全小写英文字母，可以有数字，但是不含任何特殊符号 (包括 -, _ 等)
+- **key 名称要求**:
+  - **只允许小写英文字母和数字**，不能包含其他任何特殊符号（例如空格、-、下划线等）
+  - 尽量简短，避免过长的 key 名称
+  - 例如 "greeting"、"invalidinputnumber" 是合法的，"welcome_here"、"invalid-input-number"、"非英文字符" 则不合法
 
 ## i18n 文本
 
@@ -42,16 +45,16 @@ PROMPT_AUTOKEY = """
 {lines}
 ‍```
 
-## 案例
+## 以下为一个案例，仅供格式参考！
 
-输入 i18n 文本如下:
+输入:
 
 ‍```txt
 你好 {0}
 警告！请不要输入 0-10 之外的数字！
 ‍```
 
-你仔细阅读了文本内容，分析内在的语义；最后输出:
+输出
 
 {
   "greeting": "你好 {0}",
@@ -104,7 +107,7 @@ def init_project_config():
         "i18n_dir": "src/i18n",
         "main_file": "zh_CN.yaml",
         "code_files": ["*.ts", "*.svelte", "*.tsx", "*.vue"],
-        "i18n_pattern": r"\(\((`$1`)\)\)",
+        "i18n_pattern": r"\(\(`(.+?)`\)\)",
         "dict": {},
         "strategy": "diff",
         "i18n_var_prefix": "i18n",

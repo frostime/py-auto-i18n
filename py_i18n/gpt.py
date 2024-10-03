@@ -1,3 +1,6 @@
+import sys
+
+import click
 import requests
 
 from py_i18n.config import get_global_config
@@ -17,11 +20,15 @@ def send_gpt_request(prompt):
         "temperature": 0.7,
     }
 
+    TIMEOUT_SECONDS = 10
+
     try:
-        response = requests.post(endpoint, headers=headers, json=data)
+        response = requests.post(
+            endpoint, headers=headers, json=data, timeout=TIMEOUT_SECONDS
+        )
         response.raise_for_status()
-    except requests.exceptions.HTTPError as e:
-        print(f"Error sending GPT request: {e}")
-        return None
+    except Exception as e:
+        click.echo(f"Connection failed. Error sending request to GPT: {e}", color=True)
+        sys.exit(1)
 
     return response.json()["choices"][0]["message"]["content"]

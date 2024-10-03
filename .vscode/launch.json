@@ -13,6 +13,16 @@
             "args": [
                 "translate"
             ]
+        },
+        {
+            "name": "Debug Extract",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${workspaceFolder}/py_i18n/cli.py",
+            "console": "integratedTerminal",
+            "args": [
+                "extract"
+            ]
         }
     ]
 }
