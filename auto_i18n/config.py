@@ -3,8 +3,8 @@ from pathlib import Path
 
 import yaml
 
-CONFIG_FILE = Path.home() / ".py-i18n.yaml"
-PROJECT_CONFIG_FILE = "py-i18n.project.yaml"
+CONFIG_FILE = Path.home() / ".auto-i18n.yaml"
+PROJECT_CONFIG_FILE = "auto-i18n.project.yaml"
 
 PROMPT_TRANSLATE = """
 ## 任务描述
@@ -92,8 +92,8 @@ def init_global_config():
                 "model": "gpt-4o",
             },
             "prompt": {
-                "translate": PROMPT_TRANSLATE,  # Default translate prompt
-                "autokey": PROMPT_AUTOKEY,  # Default autokey prompt
+                "translate": PROMPT_TRANSLATE,
+                "autokey": PROMPT_AUTOKEY,
             },
         }
         save_config(default_config, CONFIG_FILE)
@@ -121,3 +121,32 @@ def init_project_config():
 
     save_config(config, PROJECT_CONFIG_FILE)
     return True
+
+
+# New functions for config commands
+def get_config_value(key, global_config=True):
+    config = get_global_config() if global_config else get_project_config()
+    keys = key.split(".")
+    value = config
+    for k in keys:
+        if k in value:
+            value = value[k]
+        else:
+            return None
+    return value
+
+
+def set_config_value(key, value, global_config=True):
+    config = get_global_config() if global_config else get_project_config()
+    keys = key.split(".")
+    current = config
+    for k in keys[:-1]:
+        if k not in current:
+            current[k] = {}
+        current = current[k]
+    current[keys[-1]] = value
+    save_config(config, CONFIG_FILE if global_config else PROJECT_CONFIG_FILE)
+
+
+def list_config(global_config=True):
+    return get_global_config() if global_config else get_project_config()

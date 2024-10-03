@@ -8,4 +8,4 @@ pdm.lock
 
 temp/
 
-py-i18n.project.yaml
+auto-i18n.project.yaml

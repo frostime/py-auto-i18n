@@ -1,18 +1,18 @@
 ## 自动 i18n 工具
 
 * Context：我正在开发自己的项目项目，但是困扰于 i18n 方案
-* Task: 请你帮我开发一个基于 python 的 cli 程序，用来帮我处理一些杂项的问题；项目名称为 `py-i18n`
+* Task: 请你帮我开发一个基于 python 的 cli 程序，用来帮我处理一些杂项的问题；项目名称为 `auto-i18n`
 * 大致功能
 
   * 使用 GPT 翻译 i18n 文件
   * 从代码中根据模板自动提取需要翻译的片段，并完成翻译、替换等工作
-* 安装之后 CLI 程序的名称: `i18n` 或者 `i18n-py`，两个等效，可以使用软链接来创建 alias
+* 安装之后 CLI 程序的名称: `i18n` 或者 `auto-i18n`，两个等效，可以使用软链接来创建 alias
 
 ### CLI 程序功能需求描述
 
 * CLI 程序配置
 
-  * Global 配置：保存文件配置，存储在 ~/.py-i18n.yaml 文件中
+  * Global 配置：保存文件配置，存储在 ~/.auto-i18n.yaml 文件中
 
     * GPT.endpoint：GPT api 的 url，可以配置，默认为 GPT 官方 api 地址
     * GPT.key：api key
@@ -71,7 +71,7 @@
         "invalidinputnumber": "警告！请不要输入 0-10 之外的数字！"
       }
       ```
-  * Project 配置：对于一个需要处理 i18n 的项目，存储一些特定的配置信息；配置文件名称为 `py-i18n.project.yaml`
+  * Project 配置：对于一个需要处理 i18n 的项目，存储一些特定的配置信息；配置文件名称为 `auto-i18n.project.yaml`
 
     * i18n_dir: string, 存放 i18n 文件（json 或者 yaml）的目录（相对项目的根目录的相对路径）
     * main_file：string，主 i18n 文件，例如 `zh_CN.yaml`，代表了 `i18n_dir/main_file` 这个文件被视为主 i18n 文件
