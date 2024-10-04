@@ -1,20 +1,19 @@
 # auto-i18n
 
-[中文文档](README.md)
+[English README](README_en_US.md)
 
-auto-i18n is a powerful command-line tool designed to simplify the internationalization (i18n) process in projects. It leverages GPT to automate translations and extract translatable content from code.
+auto-i18n is a command-line tool developed in Python, designed to simplify the internationalization (i18n) process in projects. It automates translation and extracts translatable content from the code using GPT.
 
 ## Features
 
-- Automatically extract translatable strings from code
-- Use GPT to translate i18n files
-- Flexible configuration options, suitable for both global and project-specific settings
-- Supports multiple file formats (JSON, YAML)
-
+* Automatically extracts translatable strings from code
+* Automatically generates I18n variables to replace original text
+* Uses GPT to translate i18n files
+* Flexible configuration options for global and project-specific settings
 
 ## Quick Start
 
-### 1. Initialize Configuration
+### 1. Initialize configuration
 
 First, install auto-i18n:
 
@@ -22,9 +21,11 @@ First, install auto-i18n:
 pip install auto-i18n
 ```
 
-### 2. Configure GPT Parameters
+After installation, you can run commands using either `i18n` or `auto-i18n`.
 
-auto-i18n uses GPT for translation. You need to configure the GPT parameters by running the following commands:
+### 2. Configure GPT parameters
+
+auto-i18n uses GPT for translation, and you need to configure the GPT parameters. Run the following commands:
 
 ```bash
 i18n config set --global GPT.endpoint "https://api.openai.com/v1/chat/completions"
@@ -32,9 +33,9 @@ i18n config set --global GPT.key "your_API_key"
 i18n config set --global GPT.model "model_name"
 ```
 
-> Global configuration is stored in the `~/.auto-i18n.yaml` file.
+> Global configuration information is saved in the `~/.auto-i18n.yaml` file.
 
-Run `testgpt` to test the GPT API connection:
+Run the `testgpt` command to test if GPT is configured correctly:
 
 ```bash
 > i18n testgpt
@@ -43,35 +44,44 @@ Testing GPT, send: Hello, how are you?
 GPT response: Hello! I'm here and ready to help. How can I assist you today?
 ```
 
-### 3. Initialize in Your Project
+---
 
-In the root directory of the project where you want to set up i18n, run the following command:
+`auto-i18n` uses English by default. If you want to use Chinese, run:
+
+```bash
+i18n config set --global lang "zh_CN"
+```
+
+### 3. Initialize in your project
+
+In the root directory of the project where you want to configure i18n, run the following command:
 
 ```bash
 i18n init
 ```
 
-This command will create an `auto-i18n.project.yaml` file. Don’t worry, we’ll explain the contents of this file later.
+This command will create an `auto-i18n.project.yaml` file.
 
-After creation, you should first modify the following three fields according to your project:
+After creation, you should modify these fields according to your project:
 
 ```yaml
-code_files:  # Configure the glob expression for your code files here
-- '**/*.ts'
-- '**/*.svelte'
+code_files:  # Configure the glob patterns of your code files here
+- 'src/**/*.ts'
+- 'src/**/*.svelte'
 i18n_dir: src/i18n  # Specify the directory for i18n files
-main_file: zh_CN.yaml  # Specify the main language file name
+main_file: zh_CN.yaml  # Specify the name of the main language file
+i18n_pattern: \(\(`(.+?)`\)\)  # Specify the pattern for text to be translated, see the next section
 ```
 
-### 4. Write Text Directly in Your Project Code
+### 4. Write text directly in your project code
 
-When developing, you can directly write literals in your project using the following syntax:
+`auto-i18n` automatically extracts and translates text based on template matching and string replacement. When developing, you need to write literals in your project using the syntax that matches the `i18n_pattern`.
 
 ```
 ((`text content`))
 ```
 
-For example:
+For example (in a front-end project):
 
 ```ts
 // src/test.ts
@@ -83,7 +93,7 @@ const main = () => {
 ```
 
 ```svelte
-<!-- src/component.svelte -->
+<!-- src/sample.svelte -->
 <script>
     import { i18n } from 'somewhere-in-your-project';
 </script>
@@ -92,22 +102,31 @@ const main = () => {
 </div>
 ```
 
-> [!NOTE]
-> Here, ((\`xxx\`)) is used as an example because the example is in the JavaScript language.
-> You can configure the corresponding pattern according to your project language, for example, in Python, you can use ((r'xxx')).
+> [!NOTE]  
+> The use of ((\`xxx\`)) here is because the example is in JavaScript.  
+> You can configure the pattern according to the language of your project. For example, in Python, you could configure it as:
 >
-> The outer layer uses two parentheses because in almost all languages, `()` is a legal expression syntax, and it is rare for actual projects to use two consecutive `()`.
-> This way, it can avoid marking special parts (to be translated) in a way that intrudes on the source code.
+> ```yaml
+> i18n_pattern: \(\(r"(.+?)"\)\)
+> ```
+>
+> And write in the code like this:
+>
+> ```py
+> print( ((r"Just a simple test")) )
+> ```
+>
+> The outer parentheses are used because in almost all languages, `()` is valid syntax. Writing this way ensures the code can still run even if i18n replacement is not performed later. Since few projects will use consecutive `()` in their code, it marks the part that needs automatic translation without excessively intruding on the source code.
 
-### 5. Automatically Extract i18n Text
+### 5. Automatically extract i18n text
 
-Run the following command in your project directory:
+Run the following command in the project directory:
 
 ```bash
 i18n extract
 ```
 
-The program will automatically scan all matched text and generate appropriate key names, writing them into the `main_file`.
+The program will automatically scan all matched text and use GPT to generate appropriate i18n variable names, writing them into the `main_file` (e.g., zh_CN.yaml file).
 
 ```yaml
 hello: 你好
@@ -117,7 +136,7 @@ testts:
   initsuccesspleasecontinue: 初始化成功，请继续
 ```
 
-At the same time, the original i18n text in the code will be automatically replaced by the corresponding variable:
+At the same time, the original i18n text will be automatically replaced with the corresponding variable:
 
 ```ts
 // src/test.ts
@@ -129,7 +148,7 @@ const main = () => {
 ```
 
 ```svelte
-<!-- src/component.svelte -->
+<!-- src/sample.svelte -->
 <script>
     import { i18n } from 'somewhere-in-your-project';
 </script>
@@ -138,9 +157,17 @@ const main = () => {
 </div>
 ```
 
-### 6. Translate i18n Text
+The replaced variables consist of three parts:
 
-Run the following command to translate i18n text:
+1. `i18n_var_prefix`: Set in the project configuration file
+2. `filename`: A literal based on the current file name, containing only letters and numbers
+3. `i18n_var_name`: The variable name generated by GPT
+
+    > If there is a conflict in variable names, the program will automatically append a number to avoid naming conflicts.
+
+### 6. Translate i18n text
+
+Run the following command to translate the i18n text:
 
 ```bash
 i18n translate
@@ -148,9 +175,9 @@ i18n translate
 
 The program will:
 
-1. Read the text from the `main_file`.
-2. Scan all other language files in the `i18n_dir`.
-3. Translate the content and merge it into the other language files.
+1. Read the text in the `main_file`, such as the zh_CN.yaml file.
+2. Scan all other language files in the `i18n_dir`, such as en_US.yaml, ja_JP.yaml files in the same directory.
+3. Use GPT to translate the content and merge it into the other language files.
 
 ```yaml
 # en_US.yaml
@@ -160,6 +187,22 @@ samplesvelte:
 testts:
   initsuccesspleasecontinue: Initialization succeeded, please continue
 ```
+
+> [!NOTE]
+>
+> By default, the program uses the `--diff` mode for translation, which only translates incremental parts and not the entire file (to save tokens and time).
+>
+> You can specify the `--full` parameter to request a full translation of the entire i18n file.
+
+### 7. Export
+
+Use the `export` command to export the main i18n file to other formats. Currently, it supports TypeScript interface (.d.ts).
+
+```bash
+i18n export
+```
+
+By default, the exported files are written to the project directory. You can configure `export_dir` in `auto-i18n.project.yaml` to specify another directory.
 
 ## Configuration Options
 
@@ -176,80 +219,19 @@ prompt:
   autokey: 
   translate: 
 lang: 
+
 ```
 
-- `GPT.endpoint`: The GPT API address
-- `GPT.key`: The GPT API key
-- `GPT.model`: The GPT model name
-- `prompt.autokey`: The prefix for auto-generated translation keys
-- `prompt.translate`: The prompt for translating texts
-- `lang`: The language used, optional values are `en_US` and `zh_CN`
-### Default `prompt.autokey`
+* `GPT.endpoint`: The address of the GPT API
+* `GPT.key`: The API key for GPT
+* `GPT.model`: The name of the GPT model
+* `prompt.autokey`: The prompt for automatically generating i18n variable prefixes
+* `prompt.translate`: The prompt for translating text
+* `lang`: The language to use, either `en_US` or `zh_CN`
 
-> ```md
-> ## Task Description
->
-> - Background: You are developing a project that requires using i18n variables for internationalization.
-> - Task:
->   1. Read all the [## i18n text].
->   2. Generate appropriate key names based on the content of each text.
->   3. Summarize the results into JSON.
-> - **Output Format Requirements**:
->   - Retain JSON format.
->   - Output the JSON code directly, without attaching the ```json``` code block identifier.
-> - **Key Name Requirements**:
->   - **Only lowercase English letters and numbers are allowed**, no other special symbols (such as spaces, -, underscores, etc.).
->     - For example, "greeting" and "invalidinputnumber" are valid, while "welcome_here", "invalid-input-number", and "non-English characters" are not valid.
->   - **Keep short and concise**, each key name within 15 characters, upmost to 25 characters, it is ok to scacrifice readability for brevity.
->
-> ## i18n Text
->
-> ```txt
-> {lines}
-> ```
->
-> ## Example, for reference only!
->
-> Input:
->
-> ```txt
-> Hello {0}
-> Warning! Please do not enter numbers outside 0-10!
-> ```
->
-> Output
->
-> {
-> "greeting": "Hello {0}",
-> "invalidinputnumber": "Warning! Please do not enter numbers outside 0-10!"
-> }
-> ```
+### Project-Level Configuration
 
-### Default `prompt.translate`
-
-> ```md
-> ## Task Description
->
-> - Task: Translate the content of the i18n file {InFile} (see [## i18n Content]) to another language (file {OutFile}).
-> - Requirements:
->   - Target language file: {OutFile}.
->   - Output format: JSON code, please retain JSON format.
->   - Output the translated JSON code directly, without attaching the ```json``` code block identifier.
->
-> ## Vocabulary
->
-> {Dict}
->
-> ## i18n Content
->
-> ```json
-> {I18n}
-> ```
-> ```
-
-## Project Configuration
-
-The content of the `auto-i18n.project.yaml` file created by the `init` command is as follows:
+Created by the `init` command in the `auto-i18n.project.yaml` file:
 
 ```yaml
 code_files:
@@ -264,20 +246,20 @@ strategy: diff
 export_dir:
 ```
 
-- `i18n_dir`: Directory where translation files are stored
-- `main_file`: Main language translation file
-- `code_files`: Types of code files to scan
-- `i18n_pattern`: Pattern for identifying text that needs translation in code
-- `dict`: Translation dictionary for specific terms
-- `strategy`: Translation strategy: "diff" means only translate newly added content, "all" means translate all content
-- `i18n_var_prefix`: Prefix for replacement variables used in code
-- `export_dir`: Export directory, if set, will be used as the output directory for the export command
+* `i18n_dir`: The directory for storing translation files
+* `main_file`: The translation file for the main language
+* `code_files`: The types of code files to scan
+* `i18n_pattern`: The pattern to mark text that needs to be translated in the code
+* `dict`: A dictionary of specific terms for translation; you can place specific translations for your project here
+* `strategy`: The translation strategy, `"diff"` means only translating new content, `"full"` means translating all content
+* `i18n_var_prefix`: The prefix used for replacement variables in the code
+* `export_dir`: The export directory. If set, it will be used as the output directory for the export command.
 
-You can modify these configurations based on your project’s needs.
+You can modify these configurations according to your needs.
 
 ### Override Global Configuration
 
-You can override global configuration for a specific project by adding a `global_config` section to the project configuration file. For example:
+In the project configuration, you can override the global configuration in the `global_config` field, like this:
 
 ```yaml
 code_files:
@@ -292,5 +274,97 @@ strategy: diff
 global_config:
   GPT:
     endpoint: "https://api.openai.com/v1/chat/completions"
-    key: "Keys"
+    key: "your_API_key"
+    model: "model_name"
 ```
+
+‍
+
+## Additional Notes
+
+### Default prompt.autokey
+
+> ```md
+> ## Task Description
+>
+> - Background: You are developing a project which need to using i18n variables for internationalization.
+> - Task:
+>   1. Read all the [## i18n text]
+>   2. Generate appropriate key names based on the content of each text
+>  3. Summarize the results into a JSON
+> - **Output Format Requirements**:
+>   - Retaining JSON format
+>   - Output the JSON code directly, without attaching the ‍‍‍```json‍‍‍``` code block identifier
+> - **Key Name Requirements**:
+>   - **Only lowercase English letters and numbers are allowed**, no other special symbols (such as spaces, -, underscores, etc.)
+>     - E.g. "greeting" and "invalidinputnumber" are valid, while "welcome_here", "invalid-input-number", and "非英文字符" are not valid
+>     - **Keep short and concise**, each key name within 15 characters, upmost to 25 characters, it is ok to scacrifice readability for brevity.
+>
+> ## i18n Text
+>
+> ‍‍‍```txt
+> {lines}
+> ‍‍‍```
+>
+> ## An example, for reference only!
+>
+> Input:
+>
+> ‍‍‍```txt
+> Hello {0}
+> Warning! Please do not enter numbers outside 0-10!
+> ‍‍‍```
+>
+> Output
+>
+> {
+> "greeting": "Hello {0}",
+> "invalidinputnumber": "Warning! Please do not enter numbers outside 0-10!"
+> }
+> ```
+
+This prompt replaces the following variables at runtime:
+
+* `{lines}`: Replaced with all i18n text found in the source code file
+
+  * For example, if the source code is:
+
+    ```ts
+    console.log(((`你好啊`)))
+    ele.innerText = ((`警告!`))
+    ```
+  * Then `{lines}` would be replaced with:
+
+    ```ts
+    你好啊
+    警告!
+    ```
+
+### Default prompt.translate
+
+> ```md
+> ## Task Description
+>
+> - Task: Translate the content of the i18n file {InFile} (see [## i18n Content]) to another language (file {OutFile}).
+> - Requirements:
+>   - Target language file: {OutFile}
+>   - Output format: JSON code, please retaining JSON format
+>   - Output the translated JSON code directly, without attaching the ‍‍‍```json‍‍‍``` code block identifier
+>
+> ## Vocabulary
+>
+> {Dict}
+>
+> ## i18n Content
+>
+> ‍‍‍```json
+> {I18n}
+> ‍‍‍```
+> ```
+
+This prompt replaces the following variables at runtime:
+
+* `{InFile}`: The file name of your main i18n file, such as `zh_CN.json`
+* `{OutFile}`: The target i18n file to be translated, such as `ja_JP.json`
+* `{Dict}`: The `dict` field from the project configuration
+* `{I18n}`: The corresponding JSON string of i18n content to be translated
