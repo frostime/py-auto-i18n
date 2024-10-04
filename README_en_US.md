@@ -83,6 +83,13 @@ const main = () => {
 </div>
 ```
 
+> [!NOTE]
+> Here, ((\`xxx\`)) is used as an example because the example is in the JavaScript language.
+> You can configure the corresponding pattern according to your project language, for example, in Python, you can use ((f'xxx')).
+>
+> The outer layer uses two parentheses because in almost all languages, `()` is a legal expression syntax, and it is rare for actual projects to use two consecutive `()`.
+> This way, it can avoid marking special parts (to be translated) in a way that intrudes on the source code.
+
 ### 5. Automatically Extract i18n Text
 
 Run the following command in your project directory:
