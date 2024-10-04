@@ -2,6 +2,24 @@ import re
 from collections.abc import Mapping
 
 
+def file_reader(file_path):
+    return open(file_path, "r", encoding="utf-8")
+
+
+def file_writer(file_path):
+    return open(file_path, "w", encoding="utf-8")
+
+
+def read_file(file_path):
+    with file_reader(file_path) as f:
+        return f.read()
+
+
+def write_file(file_path, content):
+    with file_writer(file_path) as f:
+        f.write(content)
+
+
 def deep_update(d, u):
     for k, v in u.items():
         if isinstance(v, Mapping):

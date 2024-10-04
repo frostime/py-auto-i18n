@@ -194,7 +194,7 @@ prompt:
 > - **Key Name Requirements**:
 >   - **Only lowercase English letters and numbers are allowed**, no other special symbols (such as spaces, -, underscores, etc.)
 >     - E.g. "greeting" and "invalidinputnumber" are valid, while "welcome_here", "invalid-input-number", and "非英文字符" are not valid
->   - Keep short, each key no more than 25 characters
+>     - **Keep short and concise**, each key name within 15 characters, upmost to 25 characters, it is ok to scacrifice readability for brevity.
 >
 > ## i18n Text
 >

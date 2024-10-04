@@ -8,7 +8,7 @@
             "name": "Debug Translation",
             "type": "debugpy",
             "request": "launch",
-            "program": "${workspaceFolder}/py_i18n/cli.py",
+            "program": "${workspaceFolder}/auto_i18n/cli.py",
             "console": "integratedTerminal",
             "args": [
                 "translate"
@@ -18,7 +18,7 @@
             "name": "Debug Extract",
             "type": "debugpy",
             "request": "launch",
-            "program": "${workspaceFolder}/py_i18n/cli.py",
+            "program": "${workspaceFolder}/auto_i18n/cli.py",
             "console": "integratedTerminal",
             "args": [
                 "extract"
