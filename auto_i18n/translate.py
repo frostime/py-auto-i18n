@@ -9,6 +9,7 @@ from auto_i18n.gpt import send_gpt_request
 from auto_i18n.i18n import i18n
 from auto_i18n.utils import (
     diff_objects,
+    echo,
     ensure_no_md_code_block,
     merge_objects,
     replace_vars,
@@ -42,26 +43,37 @@ def translate_i18n(full=None):
     for out_file in out_files:
         out_obj = io.read_i18n_file(out_file)
 
+        echo.info(replace_vars((I18N.translatepy.starttranslationfile), {'file': out_file}))
+
         if out_obj is None:
             out_obj = {}
 
         if strategy == 'diff':
             to_translate = diff_objects(in_obj, out_obj)
+            echo.debug((I18N.translatepy.usediffstrategy))
+            echo.debug(to_translate)
         else:
             to_translate = in_obj
+
+        if len(to_translate) == 0:
+            echo.warning((I18N.translatepy.notranslationcontent))
+            continue
 
         prompt = replace_vars(
             PROMPT,
             {
                 'InFile': main_file,
                 'OutFile': out_file.name,
-                'Dict': json.dumps(config.get('dict', {})),
-                'I18n': json.dumps(to_translate),
+                'Dict': json.dumps(config.get('dict', {}), ensure_ascii=False),
+                'I18n': json.dumps(to_translate, ensure_ascii=False),
             },
         )
 
         result = send_gpt_request(prompt)
         result = ensure_no_md_code_block(result)
+        echo.debug((I18N.translatepy.getgpttranslationresult))
+        echo.debug(result)
+
         try:
             translated = json.loads(result)
         except json.JSONDecodeError:

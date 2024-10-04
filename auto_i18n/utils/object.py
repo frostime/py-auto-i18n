@@ -22,8 +22,8 @@ def diff_objects(obj1, obj2):
             nested_diff = diff_objects(value, obj2[key])
             if nested_diff:
                 diff[key] = nested_diff
-        elif value != obj2[key]:
-            diff[key] = value
+        # elif value != obj2[key]:
+        #     diff[key] = value
     return diff
 
 
