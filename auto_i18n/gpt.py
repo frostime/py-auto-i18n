@@ -20,7 +20,7 @@ def send_gpt_request(prompt):
         "temperature": 0.7,
     }
 
-    TIMEOUT_SECONDS = 10
+    TIMEOUT_SECONDS = None
 
     try:
         response = requests.post(
