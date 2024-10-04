@@ -4,9 +4,11 @@ import click
 import requests
 
 from auto_i18n.config import get_global_config
+from auto_i18n.i18n import i18n
 
+_ = i18n()
 
-def send_gpt_request(prompt):
+def send_gpt_request(prompt: str):
     config = get_global_config()
     endpoint = config["GPT"]["endpoint"]
     api_key = config["GPT"]["key"]
@@ -17,7 +19,7 @@ def send_gpt_request(prompt):
     data = {
         "model": model,
         "messages": [{"role": "user", "content": prompt}],
-        "temperature": 0.7,
+        "temperature": 0.6,
     }
 
     TIMEOUT_SECONDS = None
@@ -28,16 +30,12 @@ def send_gpt_request(prompt):
         )
         response.raise_for_status()
     except Exception as e:
-        click.echo(f"Connection failed. Error sending request to GPT: {e}", err=True, color=True)
+        click.echo(click.style(_.errors.connection_failed.format(error=str(e)), fg='red'))
         sys.exit(1)
 
     try:
         return response.json()["choices"][0]["message"]["content"]
     except Exception as e:
-        click.echo(
-            "ERROR: API returned an invalid GPT response, Please check your API key and endpoint.",
-            err=True,
-            color=True,
-        )
-        click.echo(f"Response Text\n: {response.text}", err=True, color=False)
+        click.echo(click.style(_.errors.invalid_response, fg='red'))
+        click.echo(f"Response Text: {response.text}")
         sys.exit(1)

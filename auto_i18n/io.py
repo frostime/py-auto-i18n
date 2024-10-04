@@ -1,27 +1,27 @@
 import json
 import os
 from pathlib import Path
-from typing import TypeAlias, Union
+from typing import Union
 
 import yaml
 
-FilePath: TypeAlias = Union[Path, str]
+FilePath = Union[Path, str]
 
 
-def file_reader(file_path):
+def file_reader(file_path: FilePath):
     return open(file_path, "r", encoding="utf-8")
 
 
-def file_writer(file_path):
+def file_writer(file_path: FilePath):
     return open(file_path, "w", encoding="utf-8")
 
 
-def read_file(file_path):
+def read_file(file_path: FilePath):
     with file_reader(file_path) as f:
         return f.read()
 
 
-def write_file(file_path, content):
+def write_file(file_path: FilePath, content: str):
     with file_writer(file_path) as f:
         f.write(content)
 

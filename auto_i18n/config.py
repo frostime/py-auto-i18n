@@ -121,7 +121,7 @@ def init_global_config():
                 "autokey": PROMPT_AUTOKEY,
             },
         }
-        io.write_yaml(default_config, CONFIG_FILE)
+        io.write_yaml(CONFIG_FILE, default_config)
 
 
 def init_project_config():
@@ -130,13 +130,13 @@ def init_project_config():
 
     config: ProjectConfig = {
         "i18n_dir": "src/i18n",
-        "main_file": "zh_CN.yaml",
+        "main_file": "zh_CN.json",
         "code_files": ["*.ts", "*.svelte", "*.tsx", "*.vue"],
         "i18n_pattern": r"\(\(`(.+?)`\)\)",
         "dict": {},
         "strategy": "diff",
         "i18n_var_prefix": "i18n",
-        "global_config": {},
+        # "global_config": {},
     }
 
     # Auto-detect i18n directory
@@ -145,7 +145,7 @@ def init_project_config():
             config["i18n_dir"] = dir_name
             break
 
-    io.write_yaml(config, PROJECT_CONFIG_FILE)
+    io.write_yaml(PROJECT_CONFIG_FILE, config)
     return True
 
 
@@ -179,7 +179,7 @@ def set_config_value(key: str, value: Any, global_config=True):
             current[k] = {}
         current = current[k]
     current[keys[-1]] = value
-    io.write_yaml(config, CONFIG_FILE if global_config else PROJECT_CONFIG_FILE)
+    io.write_yaml(CONFIG_FILE if global_config else PROJECT_CONFIG_FILE, config)
 
 
 def list_config(global_config=True):

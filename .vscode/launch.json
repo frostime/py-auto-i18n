@@ -10,9 +10,7 @@
             "request": "launch",
             "program": "${workspaceFolder}/auto_i18n/cli.py",
             "console": "integratedTerminal",
-            "args": [
-                "${input:argsInput}"
-            ]
+            "args": "${input:argsInput}"
         },
         {
             "name": "Debug Translation",

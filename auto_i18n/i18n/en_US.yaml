@@ -1,0 +1,70 @@
+cli:
+  description: "🌍 auto-i18n: A CLI tool for managing i18n in your projects."
+  help: "This tool helps you extract translatable strings from your code, manage translations, and integrate with GPT for automated translation."
+
+init:
+  description: "🚀 Initialize the project configuration."
+  help: "This command creates a new project configuration file (auto-i18n.project.yaml) in the current directory. If the file already exists, it will not be overwritten."
+  success: "✅ Project configuration file created successfully."
+  already_exists: "ℹ️ Project configuration file already exists."
+
+translate:
+  description: "🔄 Translate i18n files."
+  help: "This command translates the main i18n file to other language files. It can either translate the full file or only the differences (based on the strategy)."
+  options:
+    full: "Translate the entire file."
+    diff: "Only translate the differences (default if not specified)."
+  start: "🔍 Starting translation process..."
+  no_data: "❌ No i18n data found in main file, translation aborted."
+  no_prompt: "❌ No prompt found in global config, translation aborted."
+  failed: "❌ Translation failed for {file}, result is not a valid JSON."
+  success: "✅ Translated and updated {file}"
+
+extract:
+  description: "🔍 Extract i18n text from code files."
+  help: "This command scans the specified directory (default: current directory) for code files and extracts translatable strings based on the configured pattern."
+  options:
+    dir: "The directory to scan for code files (default: current directory)."
+  start: "🔍 Starting extraction process..."
+  failed: "❌ Extract i18n failed for {file}, the GPT response is not a valid JSON."
+  success: "✅ Updated main i18n file: {file}"
+
+testgpt:
+  description: "🧪 Test the connection to GPT."
+  help: "This command sends a test message to the configured GPT endpoint to verify that the connection and authentication are working correctly."
+  start: "🔍 Testing GPT, sending: Hello, how are you?"
+  success: "✅ GPT response: {response}"
+  failed: "❌ GPT request failed."
+
+config:
+  description: "⚙️ Manage configuration settings."
+  help: "This group of commands allows you to view and modify both global and project-specific configurations."
+  list:
+    description: "📋 List configuration settings."
+    help: "This command displays either the global or project-specific configuration. You must specify either --global or --project."
+    options:
+      global: "List the global configuration."
+      project: "List the project-specific configuration."
+    error: "❌ Please specify either --global or --project"
+  getter:
+    description: "🔍 Get a specific configuration value."
+    help: "This command retrieves the value of a specific configuration key. You must specify either --global or --project."
+    options:
+      global: "Get the value from the global configuration."
+      project: "Get the value from the project-specific configuration."
+    error:
+      specify: "❌ Please specify either --global or --project"
+      not_found: "❌ Key '{key}' not found in configuration"
+  setter:
+    description: "✏️ Set a configuration value."
+    help: "This command sets the value of a specific configuration key. You must specify either --global or --project."
+    options:
+      global: "Set the value in the global configuration."
+      project: "Set the value in the project-specific configuration."
+    error:
+      specify: "❌ Please specify either --global or --project"
+    success: "✅ Configuration updated: {key} = {value}"
+
+errors:
+  connection_failed: "❌ Connection failed. Error sending request to GPT: {error}"
+  invalid_response: "❌ ERROR: API returned an invalid GPT response. Please check your API key and endpoint."
