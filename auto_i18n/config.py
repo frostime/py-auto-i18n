@@ -1,5 +1,5 @@
 from pathlib import Path
-from typing import Any
+from typing import Any, Optional, TypedDict
 
 from auto_i18n import io
 from auto_i18n.utils import deep_update
@@ -67,23 +67,50 @@ Output
 """.strip()
 
 
-def get_global_config():
+class GPT(TypedDict):
+    endpoint: str
+    key: str
+    model: str
+
+
+class Prompt(TypedDict):
+    translate: str
+    autokey: str
+
+
+class GlobalConfig(TypedDict):
+    GPT: GPT
+    prompt: Prompt
+
+
+class ProjectConfig(TypedDict):
+    i18n_dir: str
+    main_file: str
+    code_files: list[str]
+    i18n_pattern: str
+    dict: dict[str, str]
+    strategy: str
+    i18n_var_prefix: str
+    global_config: Optional[GlobalConfig]
+
+
+def get_global_config() -> GlobalConfig:
     global_config = io.read_yaml(CONFIG_FILE)
     project_config = get_project_config()
 
-    if "global" in project_config and project_config["global"]:
-        return deep_update(global_config, project_config["global"])
+    if "global_config" in project_config and project_config["global_config"]:
+        return deep_update(global_config, project_config["global_config"])
 
     return global_config
 
 
-def get_project_config():
+def get_project_config() -> ProjectConfig:
     return io.read_yaml(Path(PROJECT_CONFIG_FILE))
 
 
 def init_global_config():
     if not CONFIG_FILE.exists():
-        default_config = {
+        default_config: GlobalConfig = {
             "GPT": {
                 "endpoint": "https://api.openai.com/v1/chat/completions",
                 "key": "",
@@ -101,7 +128,7 @@ def init_project_config():
     if Path(PROJECT_CONFIG_FILE).exists():
         return False
 
-    config = {
+    config: ProjectConfig = {
         "i18n_dir": "src/i18n",
         "main_file": "zh_CN.yaml",
         "code_files": ["*.ts", "*.svelte", "*.tsx", "*.vue"],
@@ -109,7 +136,7 @@ def init_project_config():
         "dict": {},
         "strategy": "diff",
         "i18n_var_prefix": "i18n",
-        "global": {},
+        "global_config": {},
     }
 
     # Auto-detect i18n directory
@@ -123,7 +150,7 @@ def init_project_config():
 
 
 # New functions for config commands
-def get_config_value(key: str, global_config=True):
+def get_config_value(key: str, global_config=True, default=None):
     config = get_global_config() if global_config else get_project_config()
     keys = key.split(".")
     value = config
@@ -131,7 +158,7 @@ def get_config_value(key: str, global_config=True):
         if k in value:
             value = value[k]
         else:
-            return None
+            return default
     return value
 
 

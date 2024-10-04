@@ -274,7 +274,7 @@ You can modify these configurations based on your project’s needs.
 
 ### Override Global Configuration
 
-You can override global configuration for a specific project by adding a `global` section to the project configuration file. For example:
+You can override global configuration for a specific project by adding a `global_config` section to the project configuration file. For example:
 
 ```yaml
 code_files:
@@ -286,7 +286,7 @@ dict: {}
 i18n_pattern: \(\(`(.+?)`\)\)
 i18n_var_prefix: i18n
 strategy: diff
-global:
+global_config:
   GPT:
     endpoint: "https://api.openai.com/v1/chat/completions"
     key: "Keys"

@@ -277,7 +277,7 @@ strategy: diff
 
 ### 覆盖全局配置
 
-在项目配置中可以在 `global` 字段中指定全局配置的覆盖项，例如这样:
+在项目配置中可以在 `global_config` 字段中指定全局配置的覆盖项，例如这样:
 
 ```yaml
 code_files:
@@ -289,7 +289,7 @@ dict: {}
 i18n_pattern: \(\(`(.+?)`\)\)
 i18n_var_prefix: i18n
 strategy: diff
-global:
+global_config:
   GPT:
     endpoint: "https://api.openai.com/v1/chat/completions"
     key: "你的_API_密钥"
