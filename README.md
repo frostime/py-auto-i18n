@@ -176,6 +176,7 @@ GPT:
 prompt:
   autokey: 
   translate: 
+lang: 
 
 ```
 
@@ -184,6 +185,7 @@ prompt:
 - `GPT.model`: GPT 模型名称
 - `prompt.autokey`: 自动生成的翻译文本的前缀
 - `prompt.translate`: 翻译文本的提示语
+- `lang`: 使用的语言，可选为 `en_US` 和 `zh_CN`
 
 ### 默认的 prompt.autokey
 

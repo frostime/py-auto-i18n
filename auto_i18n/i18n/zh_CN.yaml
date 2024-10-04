@@ -1,0 +1,70 @@
+cli:
+  description: "🌍 auto-i18n: 一个用于管理项目中 i18n 的 CLI 工具。"
+  help: "该工具帮助你从代码中提取可翻译的字符串，管理翻译，并与 GPT 集成以实现自动翻译。"
+
+init:
+  description: "🚀 初始化项目配置。"
+  help: "该命令在当前目录中创建一个新的项目配置文件 (auto-i18n.project.yaml)。如果文件已存在，则不会被覆盖。"
+  success: "✅ 项目配置文件创建成功。"
+  already_exists: "ℹ️ 项目配置文件已存在。"
+
+translate:
+  description: "🔄 翻译 i18n 文件。"
+  help: "该命令将主 i18n 文件翻译为其他语言文件。它可以翻译整个文件或仅翻译差异（基于策略）。"
+  options:
+    full: "翻译整个文件。"
+    diff: "仅翻译差异（默认情况下）。"
+  start: "🔍 开始翻译过程..."
+  no_data: "❌ 主文件中未找到 i18n 数据，翻译中止。"
+  no_prompt: "❌ 全局配置中未找到提示，翻译中止。"
+  failed: "❌ 翻译 {file} 失败，结果不是有效的 JSON。"
+  success: "✅ 翻译并更新 {file}"
+
+extract:
+  description: "🔍 从代码文件中提取 i18n 文本。"
+  help: "该命令扫描指定目录（默认：当前目录）中的代码文件，并根据配置的模式提取可翻译的字符串。"
+  options:
+    dir: "要扫描代码文件的目录（默认：当前目录）。"
+  start: "🔍 开始提取过程..."
+  failed: "❌ 提取 i18n 失败 {file}，GPT 响应不是有效的 JSON。"
+  success: "✅ 更新主 i18n 文件：{file}"
+
+testgpt:
+  description: "🧪 测试与 GPT 的连接。"
+  help: "该命令向配置的 GPT 端点发送测试消息，以验证连接和身份验证是否正常工作。"
+  start: "🔍 测试 GPT，发送：Hello, how are you?"
+  success: "✅ GPT 响应：{response}"
+  failed: "❌ GPT 请求失败。"
+
+config:
+  description: "⚙️ 管理配置设置。"
+  help: "该命令组允许你查看和修改全局和项目特定的配置。"
+  list:
+    description: "📋 列出配置设置。"
+    help: "该命令显示全局或项目特定的配置。你必须指定 --global 或 --project。"
+    options:
+      global: "列出全局配置。"
+      project: "列出项目特定的配置。"
+    error: "❌ 请指定 --global 或 --project"
+  getter:
+    description: "🔍 获取特定配置值。"
+    help: "该命令检索特定配置键的值。你必须指定 --global 或 --project。"
+    options:
+      global: "从全局配置中获取值。"
+      project: "从项目特定的配置中获取值。"
+    error:
+      specify: "❌ 请指定 --global 或 --project"
+      not_found: "❌ 配置中未找到键 '{key}'"
+  setter:
+    description: "✏️ 设置配置值。"
+    help: "该命令设置特定配置键的值。你必须指定 --global 或 --project。"
+    options:
+      global: "在全局配置中设置值。"
+      project: "在项目特定的配置中设置值。"
+    error:
+      specify: "❌ 请指定 --global 或 --project"
+    success: "✅ 配置已更新：{key} = {value}"
+
+errors:
+  connection_failed: "❌ 连接失败。发送请求到 GPT 时出错：{error}"
+  invalid_response: "❌ 错误：API 返回了无效的 GPT 响应。请检查你的 API 密钥和端点。"

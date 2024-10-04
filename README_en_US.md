@@ -175,6 +175,7 @@ GPT:
 prompt:
   autokey: 
   translate: 
+lang: 
 ```
 
 - `GPT.endpoint`: The GPT API address
@@ -182,7 +183,7 @@ prompt:
 - `GPT.model`: The GPT model name
 - `prompt.autokey`: The prefix for auto-generated translation keys
 - `prompt.translate`: The prompt for translating texts
-
+- `lang`: The language used, optional values are `en_US` and `zh_CN`
 ### Default `prompt.autokey`
 
 > ```md

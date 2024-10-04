@@ -1,5 +1,5 @@
 from pathlib import Path
-from typing import Any, Optional, TypedDict
+from typing import Any, Literal, Optional, TypedDict
 
 from auto_i18n import io
 from auto_i18n.utils import deep_update
@@ -81,6 +81,7 @@ class Prompt(TypedDict):
 class GlobalConfig(TypedDict):
     GPT: GPT
     prompt: Prompt
+    lang: Literal["en_US", "zh_CN"]
 
 
 class ProjectConfig(TypedDict):
@@ -116,6 +117,7 @@ def init_global_config():
                 "key": "",
                 "model": "gpt-4o",
             },
+            "lang": "en_US",
             "prompt": {
                 "translate": PROMPT_TRANSLATE,
                 "autokey": PROMPT_AUTOKEY,
