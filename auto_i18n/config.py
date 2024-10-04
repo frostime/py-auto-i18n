@@ -73,9 +73,19 @@ def load_config(file_path):
     return {}
 
 
+# def save_config(config, file_path):
+#     with open(file_path, "w", encoding="utf-8") as f:
+#         yaml.dump(config, f, allow_unicode=True)
 def save_config(config, file_path):
+    def str_presenter(dumper, data):
+        if len(data.splitlines()) > 1:  # check for multiline string
+            return dumper.represent_scalar("tag:yaml.org,2002:str", data, style="|")
+        return dumper.represent_scalar("tag:yaml.org,2002:str", data)
+
+    yaml.add_representer(str, str_presenter)
+
     with open(file_path, "w", encoding="utf-8") as f:
-        yaml.dump(config, f, allow_unicode=True)
+        yaml.dump(config, f, default_flow_style=False, allow_unicode=True)
 
 
 def get_global_config():
