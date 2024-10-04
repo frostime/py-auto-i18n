@@ -68,3 +68,14 @@ config:
 errors:
   connection_failed: "❌ Connection failed. Error sending request to GPT: {error}"
   invalid_response: "❌ ERROR: API returned an invalid GPT response. Please check your API key and endpoint."
+
+export:
+  description: "📤 Export i18n files to other formats."
+  help: "This command exports the main i18n file to other formats, currently supporting TypeScript interface (.d.ts)."
+  options:
+    format: "The format to export to (currently only 'd.ts' is supported)."
+  start: "🔍 Starting export process..."
+  unsupported_format: "❌ Unsupported export format: {format}"
+  no_data: "❌ No i18n data found in main file, export aborted."
+  success: "✅ Exported i18n interface to {file}"
+  invalid_key: "⚠️ Key '{key}' is not a valid identifier, it will be wrapped in quotes."

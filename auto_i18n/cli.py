@@ -1,13 +1,16 @@
 import click
 import yaml
+from pathlib import Path
 
 from auto_i18n.config import (
     get_config_value,
+    get_project_config_value,
     init_global_config,
     init_project_config,
     list_config,
     set_config_value,
 )
+from auto_i18n.export import export_i18n
 from auto_i18n.extract import extract_i18n
 from auto_i18n.gpt import send_gpt_request
 from auto_i18n.i18n import i18n
@@ -172,6 +175,24 @@ def config_set(is_global, is_project, key, value):
             I18N.config.setter.success.format(key=key, value=parsed_value), fg='green'
         )
     )
+
+
+@cli.command(help=I18N.export.help)
+@click.option('--format', default='d.ts', help=I18N.export.options.format)
+def export(format):
+    """Export i18n files to other formats."""
+    click.echo(click.style(I18N.export.description, fg='blue', bold=True))
+    click.echo(I18N.export.help)
+    click.echo(I18N.export.options.format.format(format=format))
+    click.echo(click.style(I18N.export.start, fg='yellow'))
+    
+    export_dir = get_project_config_value('export_dir')
+    if export_dir:
+        export_dir = Path(export_dir)
+    else:
+        export_dir = Path.cwd()
+
+    export_i18n(format, export_dir)
 
 
 if __name__ == '__main__':

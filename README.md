@@ -264,7 +264,7 @@ dict: {}
 i18n_pattern: \(\(`(.+?)`\)\)
 i18n_var_prefix: i18n
 strategy: diff
-
+export_dir:
 ```
 
 - `i18n_dir`: 存放翻译文件的目录
@@ -274,6 +274,7 @@ strategy: diff
 - `dict`: 特殊词汇的翻译对照表
 - `strategy`: 翻译策略，"diff" 表示只翻译新增的内容, "all" 表示翻译所有内容
 - `i18n_var_prefix`: 在代码中使用的替换变量的前缀
+- `export_dir`: 导出目录，如果设置，将用作 export 命令的输出目录
 
 你可以根据自己的需求修改这些配置。
 

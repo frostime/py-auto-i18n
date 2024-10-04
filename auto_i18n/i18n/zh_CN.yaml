@@ -68,3 +68,15 @@ config:
 errors:
   connection_failed: "❌ 连接失败。发送请求到 GPT 时出错：{error}"
   invalid_response: "❌ 错误：API 返回了无效的 GPT 响应。请检查你的 API 密钥和端点。"
+
+export:
+  description: "📤 导出 i18n 文件为其他格式。"
+  help: "该命令将主 i18n 文件导出为其他格式，目前支持 TypeScript 接口 (.d.ts)。"
+  options:
+    format: "要导出的格式（目前仅支持 'd.ts'）。"
+  start: "🔍 开始导出过程..."
+  unsupported_format: "❌ 不支持的导出格式：{format}"
+  no_data: "❌ 主文件中未找到 i18n 数据，导出中止。"
+  success: "✅ 已导出 i18n 接口到 {file}"
+  invalid_key: "⚠️ 键 '{key}' 不是有效的标识符，它将被双引号包围。"
+

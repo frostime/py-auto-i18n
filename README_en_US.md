@@ -261,6 +261,7 @@ dict: {}
 i18n_pattern: \(\(`(.+?)`\)\)
 i18n_var_prefix: i18n
 strategy: diff
+export_dir:
 ```
 
 - `i18n_dir`: Directory where translation files are stored
@@ -270,6 +271,7 @@ strategy: diff
 - `dict`: Translation dictionary for specific terms
 - `strategy`: Translation strategy: "diff" means only translate newly added content, "all" means translate all content
 - `i18n_var_prefix`: Prefix for replacement variables used in code
+- `export_dir`: Export directory, if set, will be used as the output directory for the export command
 
 You can modify these configurations based on your project’s needs.
 

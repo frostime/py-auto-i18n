@@ -93,6 +93,7 @@ class ProjectConfig(TypedDict):
     strategy: str
     i18n_var_prefix: str
     global_config: Optional[GlobalConfig]
+    export_dir: Optional[str]  # Add this line
 
 
 def get_global_config() -> GlobalConfig:
@@ -138,6 +139,7 @@ def init_project_config():
         "dict": {},
         "strategy": "diff",
         "i18n_var_prefix": "i18n",
+        "export_dir": None,  # Add this line
         # "global_config": {},
     }
 
