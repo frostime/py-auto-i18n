@@ -4,7 +4,7 @@ from pathlib import Path
 import click
 
 from auto_i18n import io
-from auto_i18n.config import get_global_config, get_project_config
+from auto_i18n.config import get_global_config_value, get_project_config
 from auto_i18n.gpt import send_gpt_request
 from auto_i18n.utils import (
     diff_objects,
@@ -32,7 +32,7 @@ def translate_i18n(full=None):
     out_files = list(i18n_dir.glob(f'*.{main_file.split(".")[-1]}'))
     out_files = [f for f in out_files if f != main_file_path]
 
-    PROMPT = get_global_config().get("prompt", {}).get("translate", "")
+    PROMPT = get_global_config_value("prompt.translate", default="")
 
     if PROMPT == "":
         click.echo("No prompt found in global config, translation aborted.", color="red")

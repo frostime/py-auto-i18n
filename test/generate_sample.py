@@ -76,7 +76,7 @@ def main():
             f.write(content)
 
     I18N_FILES = ['zh_CN', 'en_US', 'ja_JP']
-    FORMAT = 'yaml'
+    FORMAT = 'json'
     for filename in I18N_FILES:
         with open(f'temp/i18n/{filename}.{FORMAT}', 'w', encoding='utf-8') as f:
             f.write('')

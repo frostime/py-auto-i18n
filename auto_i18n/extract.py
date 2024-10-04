@@ -5,7 +5,10 @@ from typing import Union
 
 import click
 
-from auto_i18n.config import get_global_config, get_project_config
+from auto_i18n.config import (
+    get_global_config_value,
+    get_project_config_value,
+)
 from auto_i18n.gpt import send_gpt_request
 from auto_i18n.io import (
     read_file,
@@ -40,12 +43,14 @@ def replace_i18n_in_code(code: str, i18n_dict: dict[str, str], pattern: str, pre
 
 
 def extract_i18n(directory="."):
-    config = get_project_config()
-    global_config = get_global_config()
+    # config = get_project_config()
 
-    code_files = config.get("code_files", ["*.ts", "*.svelte"])
-    i18n_pattern = config.get("i18n_pattern", r"\(\((`$1`)\)\)")
-    i18n_var_prefix = config.get("i18n_var_prefix", "i18n")
+    # code_files = config.get("code_files", ["*.ts", "*.svelte"])
+    # i18n_pattern = config.get("i18n_pattern", r"\(\((`$1`)\)\)")
+    # i18n_var_prefix = config.get("i18n_var_prefix", "i18n")
+    code_files = get_project_config_value("code_files", ["*.ts", "*.svelte"])
+    i18n_pattern = get_project_config_value("i18n_pattern", r"\(\((`$1`)\)\)")
+    i18n_var_prefix = get_project_config_value("i18n_var_prefix", "i18n")
 
     project_code_files: list[Path] = []
     for pattern in code_files:
@@ -60,7 +65,8 @@ def extract_i18n(directory="."):
         if not lines:
             continue
 
-        prompt: str = global_config.get("prompt", {}).get("autokey", "")
+        # prompt: str = global_config.get("prompt", {}).get("autokey", "")
+        prompt = get_global_config_value("prompt.autokey", "")
         line_text = "\n".join(lines) if len(lines) > 1 else lines[0]
         prompt = prompt.replace(r"{lines}", line_text)
 
@@ -91,9 +97,11 @@ def extract_i18n(directory="."):
 
 
 def update_main_i18n_file(new_i18ns):
-    config = get_project_config()
-    i18n_dir = Path(config.get("i18n_dir", "src/i18n"))
-    main_file = config.get("main_file", "zh_CN.yaml")
+    # config = get_project_config()
+    # i18n_dir = Path(config.get("i18n_dir", "src/i18n"))
+    # main_file = config.get("main_file", "zh_CN.yaml")
+    i18n_dir = Path(get_project_config_value("i18n_dir", "src/i18n"))
+    main_file = get_project_config_value("main_file", "zh_CN.yaml")
 
     main_file_path = i18n_dir / main_file
     # with file_reader(main_file_path) as f:

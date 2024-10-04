@@ -162,6 +162,14 @@ def get_config_value(key: str, global_config=True, default=None):
     return value
 
 
+def get_global_config_value(key: str, default=None):
+    return get_config_value(key, global_config=True, default=default)
+
+
+def get_project_config_value(key: str, default=None):
+    return get_config_value(key, global_config=False, default=default)
+
+
 def set_config_value(key: str, value: Any, global_config=True):
     config = get_global_config() if global_config else get_project_config()
     keys = key.split(".")
