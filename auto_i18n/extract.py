@@ -9,9 +9,9 @@ from auto_i18n.config import get_global_config_value, get_project_config_value
 from auto_i18n.gpt import send_gpt_request
 from auto_i18n.i18n import i18n
 from auto_i18n.io import read_file, read_i18n_file, write_file, write_i18n_file
-from auto_i18n.utils import ensure_no_md_code_block, merge_objects, regex_findall
+from auto_i18n.utils import echo, ensure_no_md_code_block, merge_objects, regex_findall
 
-_ = i18n()
+I18N = i18n()
 
 
 def ensure_valid_key(i18n_obj: Union[dict[str, str], str]):
@@ -46,17 +46,20 @@ def extract_i18n(directory='.'):
     for pattern in code_files:
         project_code_files.extend(Path(directory).rglob(pattern))
 
-    click.echo(click.style(_.extract.start, fg='yellow'))
+    # click.echo(project_code_files)
+
+    if not project_code_files:
+        return
 
     new_i18ns = {}
 
     for code_file in project_code_files:
-        click.echo(f'Processing file: {code_file}')
+        click.echo(click.style(f'📝 {code_file}', fg='cyan'))
         code = read_file(code_file)
 
         lines = regex_findall(code, i18n_pattern)
         if not lines:
-            click.echo(f'No i18n strings found in {code_file}')
+            click.echo(f'\t没有在 {code_file} 中找到 i18n 变量')
             continue
 
         prompt = get_global_config_value('prompt.autokey', '')
@@ -68,15 +71,19 @@ def extract_i18n(directory='.'):
         try:
             new_i18n = json.loads(result)
         except json.JSONDecodeError:
-            click.echo(
-                f'Extract i18n failed for {code_file}, the GPT response is not a valid JSON.'
+            click.error(
+                f'\t提取失败, GPT 没有返回一个正确的 JSON 文本, 以下是 GPT 的回答:\n {result}'
             )
-            click.echo(f'Error decoding GPT response: {result}')
             continue
         new_i18n = ensure_valid_key(new_i18n)
 
         code_fname = ensure_valid_key(code_file.name)
         new_i18ns[code_fname] = new_i18n
+
+        for key, value in new_i18n.items():
+            echo.debug(f'\t{i18n_var_prefix}.{code_fname}.{key}: "{value}"')
+            if key in new_i18ns:
+                echo.warning(f'\t🚨 ⚠️{key} 在 {code_fname} 下重复了!')
 
         code = replace_i18n_in_code(
             code, new_i18n, i18n_pattern, f'{i18n_var_prefix}.{code_fname}'
@@ -84,7 +91,10 @@ def extract_i18n(directory='.'):
 
         write_file(code_file, code)
 
-    update_main_i18n_file(new_i18ns)
+    if new_i18ns:
+        update_main_i18n_file(new_i18ns)
+    else:
+        echo.warning('无需更新 i18n 文件')
 
 
 def update_main_i18n_file(new_i18ns):
@@ -97,11 +107,11 @@ def update_main_i18n_file(new_i18ns):
     if not main_i18n:
         main_i18n = {}
 
+    echo.info(f'⬆️ 更新 i18n 文件: {main_file_path}')
+
     for i18n_key, new_i18n in new_i18ns.items():
         file_i18n = main_i18n.get(i18n_key, {})
         file_i18n = merge_objects(file_i18n, new_i18n)
         main_i18n[i18n_key] = file_i18n
 
     write_i18n_file(main_file_path, main_i18n)
-
-    print(f'Updated main i18n file: {main_file_path}')

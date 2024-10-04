@@ -27,5 +27,5 @@ def replace_vars(text: str, vars: dict[str, str]):
     >>> "Hello, world!"
     """
     for key, value in vars.items():
-        text = text.replace(f'{{{key}}}', value)
+        text = text.replace(f'{{{key}}}', str(value))
     return text
