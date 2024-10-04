@@ -76,15 +76,7 @@ def extract_i18n(directory='.'):
         try:
             new_i18n = json.loads(result)
         except json.JSONDecodeError:
-            # click.error(
-            #     f'\t提取失败, GPT 没有返回一个正确的 JSON 文本, 以下是 GPT 的回答:\n {result}'
-            # )
-            echo.error(
-                replace_vars(
-                    I18N.extractpy.extractionfail,
-                    {'result': result},
-                )
-            )
+            echo.error(replace_vars(I18N.extractpy.extractionfail, {'result': result}))
             continue
         new_i18n = ensure_valid_key(new_i18n)
 
@@ -101,6 +93,16 @@ def extract_i18n(directory='.'):
                         {'key': key, 'code_fname': code_fname},
                     )
                 )
+                suffix = 1
+                while f'{key}{suffix}' in new_i18ns:
+                    suffix += 1
+
+                echo.warning(
+                    replace_vars(
+                        I18N.extractpy.avoidconflict, {'0': key, '1': f'{key}{suffix}'}
+                    )
+                )
+                key = f'{key}{suffix}'
 
         code = replace_i18n_in_code(
             code, new_i18n, i18n_pattern, f'{i18n_var_prefix}.{code_fname}'
@@ -126,10 +128,7 @@ def update_main_i18n_file(new_i18ns):
 
     # echo.info(f'⬆️ 更新 i18n 文件: {main_file_path}')
     echo.info(
-        replace_vars(
-            I18N.extractpy.updatei18nfile,
-            {'main_file_path': main_file_path},
-        )
+        replace_vars(I18N.extractpy.updatei18nfile, {'main_file_path': main_file_path})
     )
 
     for i18n_key, new_i18n in new_i18ns.items():

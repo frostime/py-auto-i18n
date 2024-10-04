@@ -51,6 +51,7 @@ extract:
   start: 🔍 开始提取过程...
   success: ✅ 更新主 i18n 文件：{file}
 extractpy:
+  avoidconflict: 为了避免冲突, 将 {0} 重命名为 {1}
   duplicatekey: ⚠️ {key} 在 {code_fname} 下重复了!
   extractionfail: '提取失败, GPT 没有返回一个正确的 JSON 文本, 以下是 GPT 的回答: {result}'
   notfoundi18nvar: 没有在 {code_file} 中找到 i18n 变量

@@ -59,6 +59,7 @@ extract:
   start: 🔍 Starting extraction process...
   success: '✅ Updated main i18n file: {file}'
 extractpy:
+  avoidconflict: In order to avoid conflict, rename {0} to {1}
   duplicatekey: ⚠️ {key} is duplicated under {code_fname}!
   extractionfail: 'Extraction failed, GPT did not return a correct JSON text. The
     following is GPT''s answer: {result}'
