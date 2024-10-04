@@ -2,11 +2,16 @@ import json
 from pathlib import Path
 
 import click
-import yaml
 
+from auto_i18n import io
 from auto_i18n.config import get_global_config, get_project_config
 from auto_i18n.gpt import send_gpt_request
-from auto_i18n.utils import diff_objects, ensure_no_md_code_block, merge_objects
+from auto_i18n.utils import (
+    diff_objects,
+    ensure_no_md_code_block,
+    merge_objects,
+    replace_vars,
+)
 
 
 def translate_i18n(full=None):
@@ -16,8 +21,9 @@ def translate_i18n(full=None):
     main_file = config.get("main_file", "zh_CN.yaml")
 
     main_file_path = i18n_dir / main_file
-    with open(main_file_path, "r", encoding="utf-8") as f:
-        in_obj = yaml.safe_load(f)
+    # with open(main_file_path, "r", encoding="utf-8") as f:
+    #     in_obj = yaml.safe_load(f)
+    in_obj = io.read_i18n_file(main_file_path)
 
     if in_obj is None or len(in_obj) == 0:
         click.echo("No i18n data found in main file, translation aborted.", color="red")
@@ -33,8 +39,9 @@ def translate_i18n(full=None):
         return
 
     for out_file in out_files:
-        with open(out_file, "r", encoding="utf-8") as f:
-            out_obj = yaml.safe_load(f)
+        # with open(out_file, "r", encoding="utf-8") as f:
+        #     out_obj = yaml.safe_load(f)
+        out_obj = io.read_i18n_file(out_file)
 
         if out_obj is None:
             out_obj = {}
@@ -44,12 +51,18 @@ def translate_i18n(full=None):
         else:
             to_translate = in_obj
 
-        prompt = PROMPT.format(
-            InFile=main_file,
-            OutFile=out_file.name,
-            Dict=json.dumps(config.get("dict", {})),
-            I18n=json.dumps(to_translate),
-        )
+        # prompt = PROMPT.format(
+        #     InFile=main_file,
+        #     OutFile=out_file.name,
+        #     Dict=json.dumps(config.get("dict", {})),
+        #     I18n=json.dumps(to_translate),
+        # )
+        prompt = replace_vars(PROMPT, {
+            "InFile": main_file,
+            "OutFile": out_file.name,
+            "Dict": json.dumps(config.get("dict", {})),
+            "I18n": json.dumps(to_translate),
+        })
 
         result = send_gpt_request(prompt)
         result = ensure_no_md_code_block(result)
@@ -61,7 +74,8 @@ def translate_i18n(full=None):
 
         merged = merge_objects(out_obj, translated)
 
-        with open(out_file, "w", encoding="utf-8") as f:
-            yaml.dump(merged, f, allow_unicode=True)
+        # with open(out_file, "w", encoding="utf-8") as f:
+        #     yaml.dump(merged, f, allow_unicode=True)
+        io.write_i18n_file(out_file, merged)
 
         print(f"Translated and updated {out_file}")

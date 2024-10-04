@@ -1,8 +1,7 @@
 from pathlib import Path
 from typing import Any
 
-import yaml
-
+from auto_i18n import io
 from auto_i18n.utils import deep_update
 
 CONFIG_FILE = Path.home() / ".auto-i18n.yaml"
@@ -68,27 +67,8 @@ Output
 """.strip()
 
 
-def load_config(file_path: Path):
-    if file_path.exists():
-        with open(file_path, "r", encoding="utf-8") as f:
-            return yaml.safe_load(f)
-    return {}
-
-
-def save_config(config: dict, file_path: Path):
-    def str_presenter(dumper, data):
-        if len(data.splitlines()) > 1:  # check for multiline string
-            return dumper.represent_scalar("tag:yaml.org,2002:str", data, style="|")
-        return dumper.represent_scalar("tag:yaml.org,2002:str", data)
-
-    yaml.add_representer(str, str_presenter)
-
-    with open(file_path, "w", encoding="utf-8") as f:
-        yaml.dump(config, f, default_flow_style=False, allow_unicode=True)
-
-
 def get_global_config():
-    global_config = load_config(CONFIG_FILE)
+    global_config = io.read_yaml(CONFIG_FILE)
     project_config = get_project_config()
 
     if "global" in project_config and project_config["global"]:
@@ -98,7 +78,7 @@ def get_global_config():
 
 
 def get_project_config():
-    return load_config(Path(PROJECT_CONFIG_FILE))
+    return io.read_yaml(Path(PROJECT_CONFIG_FILE))
 
 
 def init_global_config():
@@ -114,7 +94,7 @@ def init_global_config():
                 "autokey": PROMPT_AUTOKEY,
             },
         }
-        save_config(default_config, CONFIG_FILE)
+        io.write_yaml(default_config, CONFIG_FILE)
 
 
 def init_project_config():
@@ -138,7 +118,7 @@ def init_project_config():
             config["i18n_dir"] = dir_name
             break
 
-    save_config(config, PROJECT_CONFIG_FILE)
+    io.write_yaml(config, PROJECT_CONFIG_FILE)
     return True
 
 
@@ -164,7 +144,7 @@ def set_config_value(key: str, value: Any, global_config=True):
             current[k] = {}
         current = current[k]
     current[keys[-1]] = value
-    save_config(config, CONFIG_FILE if global_config else PROJECT_CONFIG_FILE)
+    io.write_yaml(config, CONFIG_FILE if global_config else PROJECT_CONFIG_FILE)
 
 
 def list_config(global_config=True):
