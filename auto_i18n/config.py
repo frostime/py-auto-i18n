@@ -4,8 +4,8 @@ from typing import Any, Literal, Optional, TypedDict
 from auto_i18n import io
 from auto_i18n.utils import deep_update
 
-CONFIG_FILE = Path.home() / ".auto-i18n.yaml"
-PROJECT_CONFIG_FILE = "auto-i18n.project.yaml"
+CONFIG_FILE = Path.home() / '.auto-i18n.yaml'
+PROJECT_CONFIG_FILE = 'auto-i18n.project.yaml'
 
 PROMPT_TRANSLATE = r"""
 ## Task Description
@@ -81,7 +81,7 @@ class Prompt(TypedDict):
 class GlobalConfig(TypedDict):
     GPT: GPT
     prompt: Prompt
-    lang: Literal["en_US", "zh_CN"]
+    lang: Literal['en_US', 'zh_CN']
 
 
 class ProjectConfig(TypedDict):
@@ -100,8 +100,8 @@ def get_global_config() -> GlobalConfig:
     global_config = io.read_yaml(CONFIG_FILE)
     project_config = get_project_config()
 
-    if "global_config" in project_config and project_config["global_config"]:
-        return deep_update(global_config, project_config["global_config"])
+    if 'global_config' in project_config and project_config['global_config']:
+        return deep_update(global_config, project_config['global_config'])
 
     return global_config
 
@@ -113,16 +113,13 @@ def get_project_config() -> ProjectConfig:
 def init_global_config():
     if not CONFIG_FILE.exists():
         default_config: GlobalConfig = {
-            "GPT": {
-                "endpoint": "https://api.openai.com/v1/chat/completions",
-                "key": "",
-                "model": "gpt-4o",
+            'GPT': {
+                'endpoint': 'https://api.openai.com/v1/chat/completions',
+                'key': '',
+                'model': 'gpt-4o',
             },
-            "lang": "en_US",
-            "prompt": {
-                "translate": PROMPT_TRANSLATE,
-                "autokey": PROMPT_AUTOKEY,
-            },
+            'lang': 'en_US',
+            'prompt': {'translate': PROMPT_TRANSLATE, 'autokey': PROMPT_AUTOKEY},
         }
         io.write_yaml(CONFIG_FILE, default_config)
 
@@ -132,21 +129,21 @@ def init_project_config():
         return False
 
     config: ProjectConfig = {
-        "i18n_dir": "src/i18n",
-        "main_file": "zh_CN.json",
-        "code_files": ["*.ts", "*.svelte", "*.tsx", "*.vue"],
-        "i18n_pattern": r"\(\(`(.+?)`\)\)",
-        "dict": {},
-        "strategy": "diff",
-        "i18n_var_prefix": "i18n",
-        "export_dir": None,  # Add this line
+        'i18n_dir': 'src/i18n',
+        'main_file': 'zh_CN.json',
+        'code_files': ['*.ts', '*.svelte', '*.tsx', '*.vue'],
+        'i18n_pattern': r'\(\(`(.+?)`\)\)',
+        'dict': {},
+        'strategy': 'diff',
+        'i18n_var_prefix': 'i18n',
+        'export_dir': None,  # Add this line
         # "global_config": {},
     }
 
     # Auto-detect i18n directory
-    for dir_name in ["i18n", "locale"]:
+    for dir_name in ['i18n', 'locale']:
         if Path(dir_name).is_dir():
-            config["i18n_dir"] = dir_name
+            config['i18n_dir'] = dir_name
             break
 
     io.write_yaml(PROJECT_CONFIG_FILE, config)
@@ -156,7 +153,7 @@ def init_project_config():
 # New functions for config commands
 def get_config_value(key: str, global_config=True, default=None):
     config = get_global_config() if global_config else get_project_config()
-    keys = key.split(".")
+    keys = key.split('.')
     value = config
     for k in keys:
         if k in value:
@@ -176,7 +173,7 @@ def get_project_config_value(key: str, default=None):
 
 def set_config_value(key: str, value: Any, global_config=True):
     config = get_global_config() if global_config else get_project_config()
-    keys = key.split(".")
+    keys = key.split('.')
     current = config
     for k in keys[:-1]:
         if k not in current:

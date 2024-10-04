@@ -16,12 +16,12 @@ from auto_i18n.utils import (
 
 I18N = i18n()
 
-def translate_i18n(full=None):
 
+def translate_i18n(full=None):
     config = get_project_config()
-    strategy = full if full is not None else config.get("strategy", "diff")
-    i18n_dir = Path(config.get("i18n_dir", "src/i18n"))
-    main_file = config.get("main_file", "zh_CN.yaml")
+    strategy = full if full is not None else config.get('strategy', 'diff')
+    i18n_dir = Path(config.get('i18n_dir', 'src/i18n'))
+    main_file = config.get('main_file', 'zh_CN.yaml')
 
     main_file_path = i18n_dir / main_file
     in_obj = io.read_i18n_file(main_file_path)
@@ -33,9 +33,9 @@ def translate_i18n(full=None):
     out_files = list(i18n_dir.glob(f'*.{main_file.split(".")[-1]}'))
     out_files = [f for f in out_files if f != main_file_path]
 
-    PROMPT = get_global_config_value("prompt.translate", default="")
+    PROMPT = get_global_config_value('prompt.translate', default='')
 
-    if PROMPT == "":
+    if PROMPT == '':
         click.echo(click.style(I18N.translate.no_prompt, fg='red'))
         return
 
@@ -45,17 +45,20 @@ def translate_i18n(full=None):
         if out_obj is None:
             out_obj = {}
 
-        if strategy == "diff":
+        if strategy == 'diff':
             to_translate = diff_objects(in_obj, out_obj)
         else:
             to_translate = in_obj
 
-        prompt = replace_vars(PROMPT, {
-            "InFile": main_file,
-            "OutFile": out_file.name,
-            "Dict": json.dumps(config.get("dict", {})),
-            "I18n": json.dumps(to_translate),
-        })
+        prompt = replace_vars(
+            PROMPT,
+            {
+                'InFile': main_file,
+                'OutFile': out_file.name,
+                'Dict': json.dumps(config.get('dict', {})),
+                'I18n': json.dumps(to_translate),
+            },
+        )
 
         result = send_gpt_request(prompt)
         result = ensure_no_md_code_block(result)

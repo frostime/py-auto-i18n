@@ -49,17 +49,20 @@ const main = () => {
 
 """
 
+
 def ch_dir():
     i = 0
     # 一直向上切换，直到 pyproject.toml 所在目录
-    while i < 3 and not os.path.exists("pyproject.toml"):
-        os.chdir("..")
+    while i < 3 and not os.path.exists('pyproject.toml'):
+        os.chdir('..')
         i += 1
     print(os.getcwd())
+
 
 def ensure_dir(dirpath):
     if not os.path.exists(dirpath):
         os.makedirs(dirpath)
+
 
 def main():
     ch_dir()

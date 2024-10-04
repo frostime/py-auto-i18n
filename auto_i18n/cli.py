@@ -185,7 +185,7 @@ def export(format):
     click.echo(I18N.export.help)
     click.echo(I18N.export.options.format.format(format=format))
     click.echo(click.style(I18N.export.start, fg='yellow'))
-    
+
     export_dir = get_project_config_value('export_dir')
     if export_dir:
         export_dir = Path(export_dir)

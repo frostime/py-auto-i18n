@@ -1,7 +1,8 @@
 import re
 from collections.abc import Mapping
 
-__all__ = ['deep_update', 'diff_objects','merge_objects']
+__all__ = ['deep_update', 'diff_objects', 'merge_objects']
+
 
 def deep_update(d, u):
     for k, v in u.items():

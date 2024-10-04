@@ -38,7 +38,6 @@ def replace_i18n_in_code(code: str, i18n_dict: dict[str, str], pattern: str, pre
 
 
 def extract_i18n(directory='.'):
-
     code_files = get_project_config_value('code_files', ['*.ts', '*.svelte'])
     i18n_pattern = get_project_config_value('i18n_pattern', r'\(\((`$1`)\)\)')
     i18n_var_prefix = get_project_config_value('i18n_var_prefix', 'i18n')

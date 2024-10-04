@@ -1,18 +1,15 @@
 import re
 
-__all__ = [
-    "ensure_no_md_code_block",
-    "regex_findall",
-    "replace_vars"
-]
+__all__ = ['ensure_no_md_code_block', 'regex_findall', 'replace_vars']
+
 
 def ensure_no_md_code_block(s: str):
     """确保没有被 ``` 代码块包裹"""
-    if s.endswith("```"):
+    if s.endswith('```'):
         s = s[:-3]
-    if s.lower().startswith("```json"):
+    if s.lower().startswith('```json'):
         s = s[8:]
-    if s.lower().startswith("```"):
+    if s.lower().startswith('```'):
         s = s[3:]
     return s
 
@@ -30,6 +27,5 @@ def replace_vars(text: str, vars: dict[str, str]):
     >>> "Hello, world!"
     """
     for key, value in vars.items():
-        text = text.replace(f"{{{key}}}", value)
+        text = text.replace(f'{{{key}}}', value)
     return text
-
