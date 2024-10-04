@@ -6,7 +6,7 @@ import requests
 from auto_i18n.config import get_global_config
 from auto_i18n.i18n import i18n
 
-_ = i18n()
+I18N = i18n()
 
 
 def send_gpt_request(prompt: str):
@@ -31,12 +31,12 @@ def send_gpt_request(prompt: str):
         )
         response.raise_for_status()
     except Exception as e:
-        click.echo(click.style(_.errors.connection_failed.format(error=str(e)), fg='red'))
+        click.echo(click.style(I18N.errors.connection_failed.format(error=str(e)), fg='red'))
         sys.exit(1)
 
     try:
         return response.json()['choices'][0]['message']['content']
     except Exception as e:
-        click.echo(click.style(_.errors.invalid_response, fg='red'))
+        click.echo(click.style(I18N.errors.invalid_response, fg='red'))
         click.echo(f'Response Text: {response.text}')
         sys.exit(1)

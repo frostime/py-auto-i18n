@@ -1,0 +1,12 @@
+# 本项目使用的自动 auto-i18n 配置
+code_files:
+- 'auto_i18n/**/*.py'
+dict: {}
+i18n_dir: auto_i18n/i18n
+i18n_pattern: \(r"(.+?)"\)
+i18n_var_prefix: I18N
+main_file: zh_CN.yaml
+strategy: diff
+export_dir: 
+global_config:
+  lang: zh
