@@ -6,59 +6,62 @@ import yaml
 CONFIG_FILE = Path.home() / ".auto-i18n.yaml"
 PROJECT_CONFIG_FILE = "auto-i18n.project.yaml"
 
-PROMPT_TRANSLATE = """
-## 任务描述
+PROMPT_TRANSLATE = r"""
+## Task Description
 
-- 任务: 请将 i18n 文件 {InFile} 的内容（见[## i18n 内容]）翻译到 {OutFile} 文件的语言中
-- 要求: 
-  - 目标语言文件: {OutFile}
-  - 翻译为 json 语言，注意要保留原始的 json 格式
-  - 将翻译的 json 代码直接输出，不需要附带 ‍```json ‍``` 的代码块标识
+- Task: Translate the content of the i18n file {InFile} (see [## i18n Content]) to another language (file {OutFile}).
+- Requirements:
+  - Target language file: {OutFile}
+  - Output format: JSON code, please retaining JSON format
+  - Output the translated JSON code directly, without attaching the ```json``` code block identifier
 
-## 词汇表
+## Vocabulary
 
 {Dict}
 
-## i18 内容
+## i18n Content
 
-‍```json
+```json
 {I18n}
-‍```
+```
 """.strip()
 
-PROMPT_AUTOKEY = """
-## 任务描述
+PROMPT_AUTOKEY = r"""
+## Task Description
 
-- 背景: 你正在开发一个项目，现在需要把文本替换为 i18n 变量
-- 任务: 你的任务是阅读所有的[## i18n 文本]，然后根据各个文本内容生成合适的 key 名称，最后将结果汇总到一个 json 中
-- 输出格式要求: 
-  - 使用 json 语言，保留 json 格式
-  - 将 json 代码直接输出，不需要附带 ‍```json ‍``` 的代码块标识
-- **key 名称要求**:
-  - **只允许小写英文字母和数字**，不能包含其他任何特殊符号（例如空格、-、下划线等）
-  - 尽量简短，避免过长的 key 名称
-  - 例如 "greeting"、"invalidinputnumber" 是合法的，"welcome_here"、"invalid-input-number"、"非英文字符" 则不合法
+- Background: You are developing a project which need to using i18n variables for internationalization.
+- Task:
+  1. Read all the [## i18n text]
+  2. Generate appropriate key names based on the content of each text
+ 3. Summarize the results into a JSON
+- **Output Format Requirements**:
+  - Retaining JSON format
+  - Output the JSON code directly, without attaching the ```json``` code block identifier
+- **Key Name Requirements**:
+  - **Only lowercase English letters and numbers are allowed**, no other special symbols (such as spaces, -, underscores, etc.)
+    - E.g. "greeting" and "invalidinputnumber" are valid, while "welcome_here", "invalid-input-number", and "非英文字符" are not valid
+  - Keep short, each key no more than 25 characters
 
-## i18n 文本
+## i18n Text
 
-‍```txt
+```txt
 {lines}
-‍```
+```
 
-## 以下为一个案例，仅供格式参考！
+## An example, for reference only!
 
-输入:
+Input:
 
-‍```txt
-你好 {0}
-警告！请不要输入 0-10 之外的数字！
-‍```
+```txt
+Hello {0}
+Warning! Please do not enter numbers outside 0-10!
+```
 
-输出
+Output
 
 {
-  "greeting": "你好 {0}",
-  "invalidinputnumber": "警告！请不要输入 0-10 之外的数字！"
+"greeting": "Hello {0}",
+"invalidinputnumber": "Warning! Please do not enter numbers outside 0-10!"
 }
 """.strip()
 
