@@ -1,5 +1,6 @@
 import json
 from pathlib import Path
+from typing import Union
 
 import click
 import yaml
@@ -18,8 +19,11 @@ from auto_i18n.utils import (
 )
 
 
-def ensure_valid_key(i18n_obj: dict[str, str]):
+def ensure_valid_key(i18n_obj: Union[dict[str, str], str]):
     """检查所有的 key，只允许字母、数字，其他的所有符号全部去掉"""
+    if isinstance(i18n_obj, str):
+        return "".join(filter(str.isalnum, i18n_obj))
+
     checked_obj = {}
     for key, value in i18n_obj.items():
         new_key = "".join(filter(str.isalnum, key))
@@ -63,7 +67,8 @@ def extract_i18n(directory="."):
         new_i18n = ensure_valid_key(new_i18n)
 
         # code_fpath = file.relative_to(directory).as_posix()
-        code_fname = file.name.replace(".", "")
+        # code_fname = file.name.replace(".", "")
+        code_fname = ensure_valid_key(file.name)
         new_i18ns[code_fname] = new_i18n
 
         code = replace_i18n_in_code(
@@ -83,6 +88,9 @@ def update_main_i18n_file(new_i18ns):
     main_file_path = i18n_dir / main_file
     with file_reader(main_file_path) as f:
         main_i18n = yaml.safe_load(f)
+
+    if not main_i18n:
+        main_i18n = {}
 
     for i18n_key, new_i18n in new_i18ns.items():
         file_i18n = main_i18n.get(i18n_key, {})
