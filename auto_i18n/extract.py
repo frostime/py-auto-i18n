@@ -1,11 +1,13 @@
 import json
 from pathlib import Path
 
+import click
 import yaml
 
 from auto_i18n.config import get_global_config, get_project_config
 from auto_i18n.gpt import send_gpt_request
 from auto_i18n.utils import (
+    ensure_no_md_code_block,
     extract_i18n_text,
     file_reader,
     file_writer,
@@ -51,7 +53,13 @@ def extract_i18n(directory="."):
         prompt = prompt.replace(r"{lines}", line_text)
 
         result = send_gpt_request(prompt)
-        new_i18n = json.loads(result)
+        result = ensure_no_md_code_block(result)
+        try:
+            new_i18n = json.loads(result)
+        except json.JSONDecodeError:
+            click.echo(f"Extract i18n failed for {file}, the GPT response is not a valid JSON.")
+            click.echo(f"Error decoding GPT response: {result}")
+            continue
         new_i18n = ensure_valid_key(new_i18n)
 
         # code_fpath = file.relative_to(directory).as_posix()

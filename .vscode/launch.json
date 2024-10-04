@@ -5,6 +5,16 @@
     "version": "0.2.0",
     "configurations": [
         {
+            "name": "Debug CLI",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${workspaceFolder}/auto_i18n/cli.py",
+            "console": "integratedTerminal",
+            "args": [
+                "${input:argsInput}"
+            ]
+        },
+        {
             "name": "Debug Translation",
             "type": "debugpy",
             "request": "launch",
@@ -23,6 +33,13 @@
             "args": [
                 "extract"
             ]
+        },
+    ],
+    "inputs": [
+        {
+            "id": "argsInput",
+            "type": "promptString",
+            "description": "请输入命令行参数"
         }
     ]
 }

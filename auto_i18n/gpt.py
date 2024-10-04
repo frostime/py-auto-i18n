@@ -28,7 +28,16 @@ def send_gpt_request(prompt):
         )
         response.raise_for_status()
     except Exception as e:
-        click.echo(f"Connection failed. Error sending request to GPT: {e}", color=True)
+        click.echo(f"Connection failed. Error sending request to GPT: {e}", err=True, color=True)
         sys.exit(1)
 
-    return response.json()["choices"][0]["message"]["content"]
+    try:
+        return response.json()["choices"][0]["message"]["content"]
+    except Exception as e:
+        click.echo(
+            "ERROR: API returned an invalid GPT response, Please check your API key and endpoint.",
+            err=True,
+            color=True,
+        )
+        click.echo(f"Response Text\n: {response.text}", err=True, color=False)
+        sys.exit(1)

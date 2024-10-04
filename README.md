@@ -35,6 +35,15 @@ i18n config set --global GPT.model "模型名称"
 
 > 全局配置信息保存在 `~/.auto-i18n.yaml` 文件中。
 
+运行 `testgpt` 命令测试一下 GPT 是否配置正确：
+
+```bash
+> i18n testgpt
+
+Testing GPT, send: Hello, how are you?
+GPT response: Hello! I'm here and ready to help. How can I assist you today?
+```
+
 ### 3. 在你的项目中初始化
 
 在你需要配置 i18n 的项目的根目录下，运行以下命令：
@@ -266,3 +275,23 @@ strategy: diff
 
 你可以根据自己的需求修改这些配置。
 
+### 覆盖全局配置
+
+在项目配置中可以在 `global` 字段中指定全局配置的覆盖项，例如这样:
+
+```yaml
+code_files:
+- '**/*.ts'
+- '**/*.svelte'
+i18n_dir: temp/i18n
+main_file: zh_CN.yaml
+dict: {}
+i18n_pattern: \(\(`(.+?)`\)\)
+i18n_var_prefix: i18n
+strategy: diff
+global:
+  GPT:
+    endpoint: "https://api.openai.com/v1/chat/completions"
+    key: "你的_API_密钥"
+    model: "模型名称"
+```

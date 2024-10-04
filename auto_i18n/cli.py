@@ -3,8 +3,6 @@ import yaml
 
 from auto_i18n.config import (
     get_config_value,
-    get_global_config,
-    get_project_config,
     init_global_config,
     init_project_config,
     list_config,

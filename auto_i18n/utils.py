@@ -47,6 +47,16 @@ def merge_objects(obj1, obj2):
     return deep_update(obj1.copy(), obj2)
 
 
+def ensure_no_md_code_block(s: str):
+    """确保没有被 ``` 代码块包裹"""
+    if s.endswith("```"):
+        s = s[:-3]
+    if s.lower().startswith("```json"):
+        s = s[8:]
+    if s.lower().startswith("```"):
+        s = s[3:]
+    return s
+
 def extract_i18n_text(code, pattern):
     return re.findall(pattern, code)
 

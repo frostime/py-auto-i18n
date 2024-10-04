@@ -6,7 +6,7 @@ import yaml
 
 from auto_i18n.config import get_global_config, get_project_config
 from auto_i18n.gpt import send_gpt_request
-from auto_i18n.utils import diff_objects, merge_objects
+from auto_i18n.utils import diff_objects, ensure_no_md_code_block, merge_objects
 
 
 def translate_i18n(full=None):
@@ -52,7 +52,12 @@ def translate_i18n(full=None):
         )
 
         result = send_gpt_request(prompt)
-        translated = json.loads(result)
+        result = ensure_no_md_code_block(result)
+        try:
+            translated = json.loads(result)
+        except json.JSONDecodeError:
+            click.echo(f"Translation failed for {out_file}, result is not a valid JSON.", color="red")
+            continue
 
         merged = merge_objects(out_obj, translated)
 

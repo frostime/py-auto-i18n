@@ -34,6 +34,15 @@ i18n config set --global GPT.model "model_name"
 
 > Global configuration is stored in the `~/.auto-i18n.yaml` file.
 
+Run `testgpt` to test the GPT API connection:
+
+```bash
+> i18n testgpt
+
+Testing GPT, send: Hello, how are you?
+GPT response: Hello! I'm here and ready to help. How can I assist you today?
+```
+
 ### 3. Initialize in Your Project
 
 In the root directory of the project where you want to set up i18n, run the following command:
@@ -262,3 +271,23 @@ strategy: diff
 - `i18n_var_prefix`: Prefix for replacement variables used in code
 
 You can modify these configurations based on your project’s needs.
+
+### Override Global Configuration
+
+You can override global configuration for a specific project by adding a `global` section to the project configuration file. For example:
+
+```yaml
+code_files:
+- '**/*.ts'
+- '**/*.svelte'
+i18n_dir: temp/i18n
+main_file: zh_CN.yaml
+dict: {}
+i18n_pattern: \(\(`(.+?)`\)\)
+i18n_var_prefix: i18n
+strategy: diff
+global:
+  GPT:
+    endpoint: "https://api.openai.com/v1/chat/completions"
+    key: "Keys"
+```
