@@ -1,8 +1,6 @@
-Here’s the English translation of your document:
-
----
-
 # auto-i18n
+
+[中文文档](README.md)
 
 auto-i18n is a powerful command-line tool designed to simplify the internationalization (i18n) process in projects. It leverages GPT to automate translations and extract translatable content from code.
 
@@ -13,16 +11,6 @@ auto-i18n is a powerful command-line tool designed to simplify the international
 - Flexible configuration options, suitable for both global and project-specific settings
 - Supports multiple file formats (JSON, YAML)
 
-```mermaid
-graph TD
-    A[Initialize Project] -->|i18n init| B[Create Project Configuration]
-    B --> C[Extract Strings]
-    C -->|i18n extract| D[Update Main i18n File]
-    D --> E[Translate]
-    E -->|i18n translate| F[Update Translation Files]
-    F --> G[Submit Changes]
-    G --> C
-```
 
 ## Quick Start
 
