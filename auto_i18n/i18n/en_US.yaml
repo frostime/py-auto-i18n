@@ -66,6 +66,8 @@ extractpy:
   notfoundi18nvar: The i18n variable was not found in {code_file}
   noupdatei18nfile: No need to update the i18n file
   updatei18nfile: '⬆️ Update the i18n file: {main_file_path}'
+gpt_py:
+  sendingrequesttogpt: Sending request to GPT
 init:
   already_exists: ℹ️ Project configuration file already exists.
   description: 🚀 Initialize the project configuration.

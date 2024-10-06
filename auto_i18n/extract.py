@@ -15,14 +15,26 @@ from auto_i18n.utils.string import replace_vars
 I18N = i18n()
 
 
-def ensure_valid_key(i18n_obj: Union[dict[str, str], str]):
-    """Check all keys, only allow letters and numbers, remove all other symbols"""
+def ensure_valid_key(
+    i18n_obj: Union[dict[str, str], str], convert_to_underscore: bool = False
+):
+    """
+    Check all keys, only allow letters, numbers, and underscores.
+    Optionally convert other symbols to underscores.
+    """
+
+    def clean_key(key: str) -> str:
+        if convert_to_underscore:
+            return ''.join(c if c.isalnum() or c == '_' else '_' for c in key)
+        else:
+            return ''.join(filter(lambda c: c.isalnum() or c == '_', key))
+
     if isinstance(i18n_obj, str):
-        return ''.join(filter(str.isalnum, i18n_obj))
+        return clean_key(i18n_obj)
 
     checked_obj = {}
     for key, value in i18n_obj.items():
-        new_key = ''.join(filter(str.isalnum, key))
+        new_key = clean_key(key)
         checked_obj[new_key] = value
     return checked_obj
 
@@ -42,12 +54,11 @@ def extract_i18n(directory='.'):
     code_files = get_project_config_value('code_files', ['*.ts', '*.svelte'])
     i18n_pattern = get_project_config_value('i18n_pattern', r'\(\((`$1`)\)\)')
     i18n_var_prefix = get_project_config_value('i18n_var_prefix', 'i18n')
+    i18n_var_mid = get_project_config_value('i18n_var_mid', 'filename')
 
     project_code_files: list[Path] = []
     for pattern in code_files:
         project_code_files.extend(Path(directory).rglob(pattern))
-
-    # click.echo(project_code_files)
 
     if not project_code_files:
         return
@@ -78,19 +89,29 @@ def extract_i18n(directory='.'):
         except json.JSONDecodeError:
             echo.error(replace_vars(I18N.extractpy.extractionfail, {'result': result}))
             continue
-        new_i18n = ensure_valid_key(new_i18n)
+        new_i18n = ensure_valid_key(new_i18n, convert_to_underscore=True)
 
-        code_fname = ensure_valid_key(code_file.name)
-        new_i18ns[code_fname] = new_i18n
+        if i18n_var_mid == 'filename':
+            middle_key = ensure_valid_key(code_file.name, convert_to_underscore=True)
+        elif i18n_var_mid == 'filename_noext':
+            middle_key = ensure_valid_key(code_file.stem, convert_to_underscore=True)
+        elif i18n_var_mid == 'pathname':
+            middle_key = ensure_valid_key(
+                str(code_file.relative_to(directory)).replace('/', '_').replace('\\', '_')
+            )
+        else:
+            middle_key = ensure_valid_key(code_file.name)  # Fallback to full filename
+
+        new_i18ns[middle_key] = new_i18n
 
         for key, value in new_i18n.items():
-            echo.debug(f'\t{i18n_var_prefix}.{code_fname}.{key}: "{value}"')
+            echo.debug(f'\t{i18n_var_prefix}.{middle_key}.{key}: "{value}"')
             if key in new_i18ns:
                 # echo.warning(f'\t🚨 ⚠️{key} 在 {code_fname} 下重复了!')
                 echo.warning(
                     replace_vars(
                         I18N.extractpy.duplicatekey,
-                        {'key': key, 'code_fname': code_fname},
+                        {'key': key, 'code_fname': middle_key},
                     )
                 )
                 suffix = 1
@@ -105,7 +126,7 @@ def extract_i18n(directory='.'):
                 key = f'{key}{suffix}'
 
         code = replace_i18n_in_code(
-            code, new_i18n, i18n_pattern, f'{i18n_var_prefix}.{code_fname}'
+            code, new_i18n, i18n_pattern, f'{i18n_var_prefix}.{middle_key}'
         )
 
         write_file(code_file, code)

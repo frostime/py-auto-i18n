@@ -5,6 +5,7 @@ import requests
 
 from auto_i18n.config import get_global_config
 from auto_i18n.i18n import i18n
+from auto_i18n.utils import echo
 
 I18N = i18n()
 
@@ -24,6 +25,8 @@ def send_gpt_request(prompt: str):
     }
 
     TIMEOUT_SECONDS = None
+
+    echo.debug(I18N.gpt_py.sendingrequesttogpt)
 
     try:
         response = requests.post(

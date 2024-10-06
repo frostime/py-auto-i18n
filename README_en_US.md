@@ -251,9 +251,15 @@ export_dir:
 * `code_files`: The types of code files to scan
 * `i18n_pattern`: The pattern to mark text that needs to be translated in the code
 * `dict`: A dictionary of specific terms for translation; you can place specific translations for your project here
-* `strategy`: The translation strategy, `"diff"` means only translating new content, `"full"` means translating all content
+* `strategy`: The translation strategy
+  * `"diff"` means only translating new content
+  * `"full"` means translating all content
 * `i18n_var_prefix`: The prefix used for replacement variables in the code
 * `export_dir`: The export directory. If set, it will be used as the output directory for the export command.
+* `i18n_var_mid`: The strategy for generating the middle part of the i18n key. Options are:
+  * `"filename"`: Uses the full filename, e.g. `testts`
+  * `"filename_noext"`: Uses the filename without its extension
+  * `"pathname"`: Uses the relative path of the file, replacing '/' with '_'
 
 You can modify these configurations according to your needs.
 

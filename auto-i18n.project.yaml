@@ -5,6 +5,7 @@ dict: {}
 i18n_dir: auto_i18n/i18n
 i18n_pattern: \(\(r"(.+?)"\)\)
 i18n_var_prefix: I18N
+i18n_var_mid: filename
 main_file: zh_CN.yaml
 strategy: diff
 export_dir: 

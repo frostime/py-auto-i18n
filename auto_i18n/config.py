@@ -94,6 +94,7 @@ class ProjectConfig(TypedDict):
     i18n_var_prefix: str
     global_config: Optional[GlobalConfig]
     export_dir: Optional[str]  # Add this line
+    i18n_var_mid: Literal['filename', 'filename_noext', 'pathname']
 
 
 def get_global_config() -> GlobalConfig:
@@ -137,7 +138,7 @@ def init_project_config():
         'strategy': 'diff',
         'i18n_var_prefix': 'i18n',
         'export_dir': None,  # Add this line
-        # "global_config": {},
+        'i18n_var_mid': 'filename',
     }
 
     # Auto-detect i18n directory

@@ -57,6 +57,8 @@ extractpy:
   notfoundi18nvar: 没有在 {code_file} 中找到 i18n 变量
   noupdatei18nfile: 无需更新 i18n 文件
   updatei18nfile: '⬆️ 更新 i18n 文件: {main_file_path}'
+gpt_py:
+  sendingrequesttogpt: 正在向 GPT 发送请求
 init:
   already_exists: ℹ️ 项目配置文件已存在。
   description: 🚀 初始化项目配置。
