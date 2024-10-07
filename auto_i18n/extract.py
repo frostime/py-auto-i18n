@@ -58,7 +58,7 @@ def extract_i18n(directory='.'):
 
     project_code_files: list[Path] = []
     for pattern in code_files:
-        project_code_files.extend(Path(directory).rglob(pattern))
+        project_code_files.extend(Path(directory).glob(pattern))
 
     if not project_code_files:
         return
