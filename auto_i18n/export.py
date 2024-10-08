@@ -1,5 +1,6 @@
 import json
 from pathlib import Path
+from typing import Any, Dict, List, Union
 
 import click
 
@@ -10,7 +11,7 @@ from auto_i18n.io import read_i18n_file
 I18N = i18n()
 
 
-def export_i18n(format: str, export_dir: Path):
+def export_i18n(format: str, export_dir: Path) -> None:
     if format != 'd.ts':
         click.echo(
             click.style(I18N.export.unsupported_format.format(format=format), fg='red')
@@ -37,15 +38,15 @@ def export_i18n(format: str, export_dir: Path):
     click.echo(click.style(I18N.export.success.format(file=output_file), fg='green'))
 
 
-def convert_to_interface(obj, interface_name='I18n'):
+def convert_to_interface(obj: Dict[str, Any], interface_name: str = 'I18n') -> str:
     return generate_interface(obj, interface_name)
 
 
-def spaces(level=0):
+def spaces(level: int = 0) -> str:
     return ' ' * (level * 4)
 
 
-def process_value(value, depth):
+def process_value(value: Any, depth: int) -> str:
     if isinstance(value, str):
         return 'string'
     if isinstance(value, (int, float)):
@@ -68,17 +69,19 @@ def process_value(value, depth):
     return 'any'
 
 
-def generate_interface(obj, interface_name=None, depth=0):
+def generate_interface(
+    obj: Union[Dict[str, Any], Any], interface_name: str = None, depth: int = 0
+) -> str:
     if not isinstance(obj, dict):
         return process_value(obj, depth)
 
-    lines = [
+    lines: List[str] = [
         f'{spaces(depth)}interface {interface_name} {"{"}' if interface_name else '{'
     ]
 
-    def add_property(key, value):
-        type_ = process_value(value, depth)
-        if not key.isalnum():
+    def add_property(key: str, value: Any) -> None:
+        type_: str = process_value(value, depth)
+        if not key.replace('_', '').isalnum():
             key = f'"{key}"'
             click.echo(click.style(I18N.export.invalid_key.format(key=key), fg='yellow'))
         lines.append(f'{spaces(depth+1)}{key}: {type_};')
