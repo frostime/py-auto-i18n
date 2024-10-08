@@ -33,7 +33,7 @@ def export_i18n(format: str, export_dir: Path) -> None:
 
     output_file = export_dir / 'i18n.d.ts'
     with open(output_file, 'w', encoding='utf-8') as f:
-        f.write(ts_interface)
+        f.write(ts_interface + '\n')
 
     click.echo(click.style(I18N.export.success.format(file=output_file), fg='green'))
 
