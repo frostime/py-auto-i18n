@@ -1,6 +1,11 @@
 cli:
   description: '🌍 auto-i18n: 一个用于管理项目中 i18n 的 CLI 工具。'
   help: 该工具帮助你从代码中提取可翻译的字符串，管理翻译，并与 GPT 集成以实现自动翻译。
+cli_py:
+  specifyinputfile: 指定输入文件, 读取文本后将翻译结果输出到另一个文件中
+  specifyinputfilepath: 指定输入文件路径
+  specifyoutputfilepath: 指定输出文件路径
+  specifytargetlang: 指定翻译目标语言
 config:
   description: ⚙️ 管理配置设置。
   getter:
@@ -81,6 +86,9 @@ translate:
     full: 翻译整个文件。
   start: 🔍 开始翻译过程...
   success: ✅ 翻译并更新 {file}
+translate_py:
+  translationcompleted: ✅ 翻译完成!
+  writefile: '写入文件: '
 translatepy:
   getgpttranslationresult: '获取 GPT 翻译结果:'
   notranslationcontent: 无需要翻译的内容, 如果你认为有必要更新，可以使用 --full 策略

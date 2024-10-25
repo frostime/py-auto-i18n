@@ -1,6 +1,7 @@
+from pathlib import Path
+
 import click
 import yaml
-from pathlib import Path
 
 from auto_i18n.config import (
     get_config_value,
@@ -14,7 +15,8 @@ from auto_i18n.export import export_i18n
 from auto_i18n.extract import extract_i18n
 from auto_i18n.gpt import send_gpt_request
 from auto_i18n.i18n import i18n
-from auto_i18n.translate import translate_i18n
+from auto_i18n.translate import translate_file, translate_i18n
+from auto_i18n.utils import echo
 
 # Initialize i18n
 I18N = i18n()
@@ -50,6 +52,28 @@ def translate(full):
     click.echo(I18N.translate.options.full if full else I18N.translate.options.diff)
     click.echo(click.style(I18N.translate.start, fg='yellow'))
     translate_i18n(full)
+
+
+@cli.command(name='translate-file', help=I18N.cli_py.specifyinputfile)
+@click.option(
+    '--in',
+    'in_file',
+    required=True,
+    type=click.Path(exists=True),
+    help=I18N.cli_py.specifyinputfilepath,
+)
+@click.option(
+    '--out',
+    'out_file',
+    required=True,
+    type=click.Path(),
+    help=I18N.cli_py.specifyoutputfilepath,
+)
+@click.option('--lang', default='English', help=I18N.cli_py.specifytargetlang)
+def translate_file_cmd(in_file: str, out_file: str, lang: str = 'English'):
+    """Translate i18n files."""
+    echo.info(f'"{in_file}" --> "{out_file}"[{lang}]')
+    translate_file(in_file, out_file, lang)
 
 
 @cli.command(help=I18N.extract.help)

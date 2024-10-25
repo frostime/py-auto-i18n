@@ -66,6 +66,19 @@ Output
 }
 """.strip()
 
+PROMPT_TRANSLATE_TEXT = r"""
+- **Task**: Translate the following content after `------` into the specified language: `{Lang}`.
+- **Requirements**:
+  - Output the translated text directly, without any additional text, comments, or markdown code block modifiers etc.
+  - Retain the original formatting of the text, such as Markdown, XML, or other structured formats (if exists).
+- **Vocabulary**:
+  - {Dict}
+
+------
+
+{Content}
+```
+""".strip()
 
 class GPT(TypedDict):
     endpoint: str
@@ -132,12 +145,12 @@ def init_project_config():
     config: ProjectConfig = {
         'i18n_dir': 'src/i18n',
         'main_file': 'zh_CN.json',
-        'code_files': ['*.ts', '*.svelte', '*.tsx', '*.vue'],
+        'code_files': ['src/**/*.ts', 'src/**/*.svelte', 'src/**/*.tsx', 'src/**/*.vue'],
         'i18n_pattern': r'\(\(`(.+?)`\)\)',
         'dict': {},
         'strategy': 'diff',
         'i18n_var_prefix': 'i18n',
-        'export_dir': None,  # Add this line
+        'export_dir': None,
         'i18n_var_mid': 'filename',
     }
 

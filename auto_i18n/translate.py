@@ -4,7 +4,11 @@ from pathlib import Path
 import click
 
 from auto_i18n import io
-from auto_i18n.config import get_global_config_value, get_project_config
+from auto_i18n.config import (
+    PROMPT_TRANSLATE_TEXT,
+    get_global_config_value,
+    get_project_config,
+)
 from auto_i18n.gpt import send_gpt_request
 from auto_i18n.i18n import i18n
 from auto_i18n.utils import (
@@ -43,7 +47,9 @@ def translate_i18n(full=None):
     for out_file in out_files:
         out_obj = io.read_i18n_file(out_file)
 
-        echo.info(replace_vars((I18N.translatepy.starttranslationfile), {'file': out_file}))
+        echo.info(
+            replace_vars((I18N.translatepy.starttranslationfile), {'file': out_file})
+        )
 
         if out_obj is None:
             out_obj = {}
@@ -85,3 +91,24 @@ def translate_i18n(full=None):
         io.write_i18n_file(out_file, merged)
 
         click.echo(click.style(I18N.translate.success.format(file=out_file), fg='green'))
+
+
+def translate_file(in_file: str, out_file: str, lang: str = 'English'):
+    config = get_project_config()
+    content = io.read_file(in_file)
+    prompt = replace_vars(
+        PROMPT_TRANSLATE_TEXT,
+        {
+            'Lang': lang,
+            'Dict': json.dumps(
+                config.get('dict', 'Empty'), ensure_ascii=False, separators=(',', ':')
+            ),
+            'Content': content,
+        },
+    )
+
+    result = send_gpt_request(prompt)
+
+    echo.debug(I18N.translate_py.translationcompleted)
+    echo.debug(I18N.translate_py.writefile + out_file)
+    io.write_file(out_file, result)

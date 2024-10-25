@@ -2,6 +2,12 @@ cli:
   description: '🌍 auto-i18n: A CLI tool for managing i18n in your projects.'
   help: This tool helps you extract translatable strings from your code, manage translations,
     and integrate with GPT for automated translation.
+cli_py:
+  specifyinputfile: Specify the input file and output the translation result to another
+    file after reading the text
+  specifyinputfilepath: Specify the input file path
+  specifyoutputfilepath: Specify the output file path
+  specifytargetlang: Specify the target language for translation
 config:
   description: ⚙️ Manage configuration settings.
   getter:
@@ -93,6 +99,9 @@ translate:
     full: Translate the entire file.
   start: 🔍 Starting translation process...
   success: ✅ Translated and updated {file}
+translate_py:
+  translationcompleted: ✅ Translation completed!
+  writefile: 'Write to file: '
 translatepy:
   getgpttranslationresult: 'Get GPT translation result:'
   notranslationcontent: There is no content to be translated. If you think it is necessary
