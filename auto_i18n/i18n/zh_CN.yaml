@@ -2,6 +2,7 @@ cli:
   description: '🌍 auto-i18n: 一个用于管理项目中 i18n 的 CLI 工具。'
   help: 该工具帮助你从代码中提取可翻译的字符串，管理翻译，并与 GPT 集成以实现自动翻译。
 cli_py:
+  force_cover_config: 如果配置文件已存在, 强制覆盖
   specifyinputfile: 指定输入文件, 读取文本后将翻译结果输出到另一个文件中
   specifyinputfilepath: 指定输入文件路径
   specifyoutputfilepath: 指定输出文件路径
@@ -69,6 +70,21 @@ init:
   description: 🚀 初始化项目配置。
   help: 该命令在当前目录中创建一个新的项目配置文件 (auto-i18n.project.yaml)。如果文件已存在，则不会被覆盖。
   success: ✅ 项目配置文件创建成功。
+project_config_doc: |
+  * `i18n_dir`: 存放翻译文件的目录
+  * `main_file`: 主要语言的翻译文件
+  * `code_files`: 需要扫描的代码文件类型
+  * `i18n_pattern`: 在代码中标记需要翻译的文本的模式
+  * `dict`: 特殊词汇的翻译对照表；你可以把项目中涉及到的一些属于翻译写在这个地方
+  * `strategy`: 翻译策略
+    * `"diff"` 表示只翻译新增的内容
+    * `"full"` 表示翻译所有内容
+  * `i18n_var_prefix`: 在代码中使用的替换变量的前缀
+  * `export_dir`: 导出目录，如果设置，将用作 export 命令的输出目录
+  * `i18n_var_mid`: i18n 键的中间部分生成策略。选项包括：
+    * `"filename"`: 使用完整文件名，包含扩展名，如 `utilsts`
+    * `"filename_noext"`: 使用不带扩展名的文件名
+    * `"pathname"`: 使用文件的相对路径
 testgpt:
   description: 🧪 测试与 GPT 的连接。
   failed: ❌ GPT 请求失败。

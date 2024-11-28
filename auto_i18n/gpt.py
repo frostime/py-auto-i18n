@@ -26,7 +26,7 @@ def send_gpt_request(prompt: str):
 
     TIMEOUT_SECONDS = None
 
-    echo.debug(I18N.gpt_py.sendingrequesttogpt)
+    echo.debug(I18N.gpt_py.sendingrequesttogpt + f' | [{model}] -> {endpoint}')
 
     try:
         response = requests.post(

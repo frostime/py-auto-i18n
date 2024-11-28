@@ -43,7 +43,10 @@ i18n config set --global GPT.key "你的_API_密钥"
 i18n config set --global GPT.model "模型名称"
 ```
 
-> 全局配置信息保存在 `~/.auto-i18n.yaml`​ 文件中。
+> [!NOTE]
+> v1.6.0 版本之前，全局配置信息保存在 `~/.auto-i18n.yaml`​ 文件中。
+>
+> v1.6.0 版本开始，配置文件会自动迁移到 `~/.config/auto-i18n/global-config.yaml`​ 中。
 
 运行 `testgpt`​ 命令测试一下 GPT 是否配置正确：
 
@@ -219,7 +222,7 @@ i18n export
 
 ### 全局配置
 
-存放在 `~/.auto-i18n.yaml`​ 文件中。
+存放在 `~/.config/auto-i18n/global-config.yaml`​ 文件中。
 
 ```yaml
 GPT:

@@ -33,7 +33,11 @@ i18n config set --global GPT.key "your_API_key"
 i18n config set --global GPT.model "model_name"
 ```
 
-> Global configuration information is saved in the `~/.auto-i18n.yaml` file.
+> [!NOTE]
+> Before v1.6.0, the global configuration information was saved in the `~/.auto-i18n.yaml` file.
+>
+> Since v1.6.0, the configuration file will be automatically migrated to `~/.config/auto-i18n/global-config.yaml`.
+
 
 Run the `testgpt` command to test if GPT is configured correctly:
 
@@ -208,7 +212,7 @@ By default, the exported files are written to the project directory. You can con
 
 ### Global Configuration
 
-Stored in the `~/.auto-i18n.yaml` file.
+Stored in the `~/.config/auto-i18n/global-config.yaml` file.
 
 ```yaml
 GPT:

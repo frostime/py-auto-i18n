@@ -4,7 +4,10 @@ from typing import Any, Literal, Optional, TypedDict
 from auto_i18n import io
 from auto_i18n.utils import deep_update
 
-CONFIG_FILE = Path.home() / '.auto-i18n.yaml'
+# Update the config file path
+OLD_CONFIG_FILE = Path.home() / '.auto-i18n.yaml'
+CONFIG_FILE = Path.home() / '.config' / 'auto-i18n' / 'global-config.yaml'
+
 PROJECT_CONFIG_FILE = 'auto-i18n.project.yaml'
 
 PROMPT_TRANSLATE = r"""
@@ -80,6 +83,28 @@ PROMPT_TRANSLATE_TEXT = r"""
 ```
 """.strip()
 
+DEFAULT_GLOBAL_CONFIG = {
+    'GPT': {
+        'endpoint': 'https://api.openai.com/v1/chat/completions',
+        'key': '',
+        'model': 'gpt-4o',
+    },
+    'lang': 'en_US',
+    'prompt': {'translate': PROMPT_TRANSLATE, 'autokey': PROMPT_AUTOKEY},
+}
+
+DEFAULT_PROJECT_CONFIG = {
+    'i18n_dir': 'src/i18n',
+    'main_file': 'zh_CN.json',
+    'code_files': ['src/**/*.ts', 'src/**/*.svelte', 'src/**/*.tsx', 'src/**/*.vue'],
+    'i18n_pattern': r'\(\(`(.+?)`\)\)',
+    'dict': {},
+    'strategy': 'diff',
+    'i18n_var_prefix': 'i18n',
+    'export_dir': None,
+    'i18n_var_mid': 'filename',
+}
+
 class GPT(TypedDict):
     endpoint: str
     key: str
@@ -124,35 +149,41 @@ def get_project_config() -> ProjectConfig:
     return io.read_yaml(Path(PROJECT_CONFIG_FILE))
 
 
+# Add new migration function
+def migrate_from_old_config():
+    """Migrate config from old location to new if needed."""
+    if not CONFIG_FILE.exists() and OLD_CONFIG_FILE.exists():
+        # Create parent directories if they don't exist
+        CONFIG_FILE.parent.mkdir(parents=True, exist_ok=True)
+
+        # Read old config and write to new location
+        old_config = io.read_yaml(OLD_CONFIG_FILE)
+        io.write_yaml(CONFIG_FILE, old_config)
+
+        # Remove old config file
+        OLD_CONFIG_FILE.unlink()
+
+
+# Modify init_global_config to use migration
 def init_global_config():
+    migrate_from_old_config()
+
     if not CONFIG_FILE.exists():
-        default_config: GlobalConfig = {
-            'GPT': {
-                'endpoint': 'https://api.openai.com/v1/chat/completions',
-                'key': '',
-                'model': 'gpt-4o',
-            },
-            'lang': 'en_US',
-            'prompt': {'translate': PROMPT_TRANSLATE, 'autokey': PROMPT_AUTOKEY},
-        }
+        default_config: GlobalConfig = DEFAULT_GLOBAL_CONFIG
+        # Ensure directory exists
+        CONFIG_FILE.parent.mkdir(parents=True, exist_ok=True)
         io.write_yaml(CONFIG_FILE, default_config)
 
 
-def init_project_config():
-    if Path(PROJECT_CONFIG_FILE).exists():
+def init_project_config(overwrite: bool = False):
+    if Path(PROJECT_CONFIG_FILE).exists() and not overwrite:
         return False
 
-    config: ProjectConfig = {
-        'i18n_dir': 'src/i18n',
-        'main_file': 'zh_CN.json',
-        'code_files': ['src/**/*.ts', 'src/**/*.svelte', 'src/**/*.tsx', 'src/**/*.vue'],
-        'i18n_pattern': r'\(\(`(.+?)`\)\)',
-        'dict': {},
-        'strategy': 'diff',
-        'i18n_var_prefix': 'i18n',
-        'export_dir': None,
-        'i18n_var_mid': 'filename',
-    }
+    # Initialize i18n
+    from auto_i18n.i18n import i18n
+    I18N = i18n()
+
+    config: ProjectConfig = DEFAULT_PROJECT_CONFIG
 
     # Auto-detect i18n directory
     for dir_name in ['i18n', 'locale']:
@@ -161,6 +192,14 @@ def init_project_config():
             break
 
     io.write_yaml(PROJECT_CONFIG_FILE, config)
+    # i18n.project_config_doc 加入到 PROJECT_CONFIG_FILE 的开头; 注释文档
+    with open(PROJECT_CONFIG_FILE, 'r', encoding='utf-8') as file:
+        lines = file.readlines()
+    comments = I18N.project_config_doc.split('\n')
+    comments = [f'# {comment}\n' for comment in comments]
+    with open(PROJECT_CONFIG_FILE, 'w', encoding='utf-8') as file:
+        file.writelines(comments + lines)
+
     return True
 
 

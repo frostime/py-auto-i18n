@@ -33,11 +33,12 @@ def cli():
 
 
 @cli.command(help=I18N.init.help)
-def init():
+@click.option('--overwrite', is_flag=True, default=False, help=I18N.cli_py.force_cover_config)
+def init(overwrite):
     """Initialize the project configuration."""
     click.echo(click.style(I18N.init.description, fg='blue', bold=True))
     click.echo(I18N.init.help)
-    if init_project_config():
+    if init_project_config(overwrite):
         click.echo(click.style(I18N.init.success, fg='green'))
     else:
         click.echo(click.style(I18N.init.already_exists, fg='yellow'))
@@ -126,10 +127,13 @@ def config_list(is_global, is_project):
     """List configuration settings."""
     click.echo(click.style(I18N.config.list.description, fg='blue', bold=True))
     click.echo(I18N.config.list.help)
-    if is_global == is_project:
+    if is_global and is_project:
         click.echo(click.style(I18N.config.list.error, fg='red'))
         return
-    config = list_config(is_global)
+    if is_project:
+        config = list_config(False)
+    else:
+        config = list_config(True)
     click.echo(yaml.dump(config, allow_unicode=True))
 
 
