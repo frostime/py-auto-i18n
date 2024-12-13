@@ -29,3 +29,24 @@ def replace_vars(text: str, vars: dict[str, str]):
     for key, value in vars.items():
         text = text.replace(f'{{{key}}}', str(value))
     return text
+
+
+def to_md_list(obj):
+    """将 obj 转换为 md list
+
+    list:
+    - item1
+    - item2
+
+    dict:
+    - key: value
+    - key: value
+    """
+    if len(obj) == 0:
+        return ""
+    if isinstance(obj, list):
+        return "\n".join(f"- {item}" for item in obj)
+    elif isinstance(obj, dict):
+        return "\n".join(f"- {key}: {value}" for key, value in obj.items())
+    else:
+        return str(obj)

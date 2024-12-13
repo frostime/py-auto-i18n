@@ -17,9 +17,27 @@
             "type": "debugpy",
             "request": "launch",
             "program": "${workspaceFolder}/auto_i18n/cli.py",
+            "cwd": "H:/SrcCode/SiYuanDevelopment/sy-query-view",
             "console": "integratedTerminal",
             "args": [
                 "translate"
+            ]
+        },
+        {
+            "name": "Debug Translation File",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${workspaceFolder}/auto_i18n/cli.py",
+            "cwd": "${workspaceFolder}",
+            "console": "integratedTerminal",
+            "args": [
+                "translate-file",
+                "--in",
+                "temp/SAMPLE.txt",
+                "--out",
+                "temp/SAMPLE-EN.txt",
+                "--lang",
+                "English"
             ]
         },
         {

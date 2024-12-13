@@ -2,7 +2,7 @@ from pathlib import Path
 from typing import Any, Literal, Optional, TypedDict
 
 from auto_i18n import io
-from auto_i18n.utils import deep_update
+from auto_i18n.utils import deep_update, merge_objects
 
 # Update the config file path
 OLD_CONFIG_FILE = Path.home() / '.auto-i18n.yaml'
@@ -70,12 +70,13 @@ Output
 """.strip()
 
 PROMPT_TRANSLATE_TEXT = r"""
-- **Task**: Translate the following content after `------` into the specified language: `{Lang}`.
-- **Requirements**:
-  - Output the translated text directly, without any additional text, comments, or markdown code block modifiers etc.
-  - Retain the original formatting of the text, such as Markdown, XML, or other structured formats (if exists).
-- **Vocabulary**:
-  - {Dict}
+**Task**:
+Translate the following content after `------` into the specified language: `{Lang}`.
+**Requirements**:
+- Output the translated text directly, without any additional text, comments, or markdown code block modifiers etc.
+- Retain the original formatting of the text, such as Markdown, XML, or other structured formats (if exists).
+**Vocabulary**:
+{Dict}
 
 ------
 
@@ -90,7 +91,11 @@ DEFAULT_GLOBAL_CONFIG = {
         'model': 'gpt-4o',
     },
     'lang': 'en_US',
-    'prompt': {'translate': PROMPT_TRANSLATE, 'autokey': PROMPT_AUTOKEY},
+    'prompt': {
+        'translate': PROMPT_TRANSLATE,
+        'autokey': PROMPT_AUTOKEY,
+        'translateText': PROMPT_TRANSLATE_TEXT,
+    },
 }
 
 DEFAULT_PROJECT_CONFIG = {
@@ -135,11 +140,11 @@ class ProjectConfig(TypedDict):
     i18n_var_mid: Literal['filename', 'filename_noext', 'pathname']
 
 
-def get_global_config() -> GlobalConfig:
+def get_global_config(merge_project: bool = True) -> GlobalConfig:
     global_config = io.read_yaml(CONFIG_FILE)
     project_config = get_project_config()
 
-    if 'global_config' in project_config and project_config['global_config']:
+    if merge_project and 'global_config' in project_config and project_config['global_config']:
         return deep_update(global_config, project_config['global_config'])
 
     return global_config
@@ -173,6 +178,11 @@ def init_global_config():
         # Ensure directory exists
         CONFIG_FILE.parent.mkdir(parents=True, exist_ok=True)
         io.write_yaml(CONFIG_FILE, default_config)
+    else:
+        global_config = get_global_config(False)
+        # use exists global_config to overwrite the default config
+        updated_config = merge_objects(DEFAULT_GLOBAL_CONFIG, global_config)
+        io.write_yaml(CONFIG_FILE, updated_config)
 
 
 def init_project_config(overwrite: bool = False):
@@ -181,6 +191,7 @@ def init_project_config(overwrite: bool = False):
 
     # Initialize i18n
     from auto_i18n.i18n import i18n
+
     I18N = i18n()
 
     config: ProjectConfig = DEFAULT_PROJECT_CONFIG

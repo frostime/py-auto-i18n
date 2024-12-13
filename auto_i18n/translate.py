@@ -18,6 +18,7 @@ from auto_i18n.utils import (
     merge_objects,
     replace_vars,
 )
+from auto_i18n.utils.string import to_md_list
 
 I18N = i18n()
 
@@ -70,7 +71,7 @@ def translate_i18n(full=None):
             {
                 'InFile': main_file,
                 'OutFile': out_file.name,
-                'Dict': json.dumps(config.get('dict', {}), ensure_ascii=False),
+                'Dict': to_md_list(config.get('dict', 'No')),
                 'I18n': json.dumps(to_translate, ensure_ascii=False),
             },
         )
@@ -100,9 +101,7 @@ def translate_file(in_file: str, out_file: str, lang: str = 'English'):
         PROMPT_TRANSLATE_TEXT,
         {
             'Lang': lang,
-            'Dict': json.dumps(
-                config.get('dict', 'Empty'), ensure_ascii=False, separators=(',', ':')
-            ),
+            'Dict': to_md_list(config.get('dict', 'No')),
             'Content': content,
         },
     )
