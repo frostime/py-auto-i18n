@@ -42,7 +42,7 @@ def to_md_list(obj):
     - key: value
     - key: value
     """
-    if len(obj) == 0:
+    if (obj is None) or (len(obj) == 0):
         return ""
     if isinstance(obj, list):
         return "\n".join(f"- {item}" for item in obj)
