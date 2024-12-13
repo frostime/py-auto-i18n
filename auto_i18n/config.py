@@ -81,7 +81,6 @@ Translate the following content after `------` into the specified language: `{La
 ------
 
 {Content}
-```
 """.strip()
 
 DEFAULT_GLOBAL_CONFIG = {
