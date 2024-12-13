@@ -7,5 +7,6 @@ __pycache__/
 pdm.lock
 
 temp/
+.pypirc
 
 # auto-i18n.project.yaml
