@@ -11,6 +11,17 @@ cli_py:
   specifytargetlang: Specify the target language for translation
 config:
   description: ⚙️ Manage configuration settings.
+  edit:
+    description: 📝 Edit configuration file directly.
+    help: This command opens the configuration file in your system's default editor. You must specify either --global or --project.
+    options:
+      global: Edit the global configuration file.
+      project: Edit the project-specific configuration file.
+    error:
+      specify: ❌ Please specify either --global or --project
+      not_found: ❌ Config file not found - {file}
+      failed: ❌ Failed to open config file - {error}
+    success: ✅ Opened config file for editing - {file}
   getter:
     description: 🔍 Get a specific configuration value.
     error:

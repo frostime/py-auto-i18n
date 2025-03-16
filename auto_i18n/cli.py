@@ -33,7 +33,9 @@ def cli():
 
 
 @cli.command(help=I18N.init.help)
-@click.option('--overwrite', is_flag=True, default=False, help=I18N.cli_py.force_cover_config)
+@click.option(
+    '--overwrite', is_flag=True, default=False, help=I18N.cli_py.force_cover_config
+)
 def init(overwrite):
     """Initialize the project configuration."""
     click.echo(click.style(I18N.init.description, fg='blue', bold=True))
@@ -203,6 +205,98 @@ def config_set(is_global, is_project, key, value):
             I18N.config.setter.success.format(key=key, value=parsed_value), fg='green'
         )
     )
+
+
+@config.command(
+    'edit',
+    help=I18N.config.edit.help
+    if hasattr(I18N.config, 'edit')
+    else 'Edit the configuration file directly',
+)
+@click.option(
+    '--global',
+    'is_global',
+    is_flag=True,
+    default=False,
+    help=I18N.config.edit.options['global']
+    if hasattr(I18N.config, 'edit')
+    else 'Edit the global configuration file',
+)
+@click.option(
+    '--project',
+    'is_project',
+    is_flag=True,
+    default=False,
+    help=I18N.config.edit.options['project']
+    if hasattr(I18N.config, 'edit')
+    else 'Edit the project configuration file',
+)
+def config_edit(is_global, is_project):
+    """Edit the configuration file directly."""
+    if hasattr(I18N.config, 'edit'):
+        click.echo(click.style(I18N.config.edit.description, fg='blue', bold=True))
+        click.echo(I18N.config.edit.help)
+    else:
+        click.echo(click.style('Edit Configuration', fg='blue', bold=True))
+        click.echo('Edit the configuration file directly with your system editor.')
+
+    if is_global == is_project:
+        error_msg = (
+            I18N.config.edit.error.specify
+            if hasattr(I18N.config, 'edit') and hasattr(I18N.config.edit, 'error')
+            else 'Please specify either --global or --project'
+        )
+        click.echo(click.style(error_msg, fg='red'))
+        return
+
+    import os
+    import platform
+    import subprocess
+
+    # Determine which config file to edit
+    if is_global:
+        from auto_i18n.config import CONFIG_FILE
+
+        config_file = CONFIG_FILE
+    else:
+        from auto_i18n.config import PROJECT_CONFIG_FILE
+
+        config_file = os.path.join(os.getcwd(), PROJECT_CONFIG_FILE)
+
+    # Ensure the file exists
+    if not os.path.exists(config_file):
+        error_msg = (
+            I18N.config.edit.error.not_found.format(file=config_file)
+            if hasattr(I18N.config, 'edit') and hasattr(I18N.config.edit, 'error')
+            else f'Config file not found: {config_file}'
+        )
+        click.echo(click.style(error_msg, fg='red'))
+        return
+
+    # Open the file with the system's default editor
+    try:
+        if platform.system() == 'Windows':
+            os.startfile(config_file)
+        elif platform.system() == 'Darwin':  # macOS
+            subprocess.run(['open', config_file], check=True)
+        else:  # Linux and other Unix-like systems
+            # Try to use the default editor from environment variables
+            editor = os.environ.get('EDITOR', 'vi')
+            subprocess.run([editor, config_file], check=True)
+
+        success_msg = (
+            I18N.config.edit.success
+            if hasattr(I18N.config, 'edit')
+            else f'Opened config file for editing: {config_file}'
+        )
+        click.echo(click.style(success_msg, fg='green'))
+    except Exception as e:
+        error_msg = (
+            I18N.config.edit.error.failed.format(error=str(e))
+            if hasattr(I18N.config, 'edit') and hasattr(I18N.config.edit, 'error')
+            else f'Failed to open config file: {str(e)}'
+        )
+        click.echo(click.style(error_msg, fg='red'))
 
 
 @cli.command(help=I18N.export.help)

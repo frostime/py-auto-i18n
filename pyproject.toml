@@ -1,6 +1,6 @@
 [project]
 name = "auto-i18n"
-version = "1.6.3-post1"
+version = "1.6.4"
 description = ""
 authors = [
     {name = "frostime", email = "frostime@foxmail.com"},

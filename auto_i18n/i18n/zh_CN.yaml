@@ -9,6 +9,17 @@ cli_py:
   specifytargetlang: 指定翻译目标语言
 config:
   description: ⚙️ 管理配置设置。
+  edit:
+    description: 📝 直接编辑配置文件。
+    help: 该命令在系统默认编辑器中打开配置文件。你必须指定 --global 或 --project。
+    options:
+      global: 编辑全局配置文件。
+      project: 编辑项目特定的配置文件。
+    error:
+      specify: ❌ 请指定 --global 或 --project
+      not_found: ❌ 未找到配置文件 - {file}
+      failed: ❌ 打开配置文件失败 - {error}
+    success: ✅ 已打开配置文件进行编辑 - {file}
   getter:
     description: 🔍 获取特定配置值。
     error:
